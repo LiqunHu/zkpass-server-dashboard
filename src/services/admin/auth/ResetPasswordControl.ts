@@ -6,7 +6,7 @@ const logger = createLogger(__filename)
 
 export default async function (req: Request, res: Response) {
   try {
-    let method = await common.reqTrans(req, __filename)
+    const method = await common.reqTrans(req, __filename)
     let ret = 'common_01'
     logger.debug(method)
     if (method === 'search') {

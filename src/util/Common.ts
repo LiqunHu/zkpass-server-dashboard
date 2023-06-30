@@ -21,7 +21,9 @@ async function reqTrans(req: Request, callFile: string) {
     callFile.substring(callFile.length - 3, callFile.length)
   if (fs.existsSync(validatorFile)) {
     const validator = await import(validatorFile)
-    if (validator.default.apiList.hasOwnProperty(method)) {
+    if (
+      Object.prototype.hasOwnProperty.call(validator.default.apiList, method)
+    ) {
       const reqJoiSchema = validator.default.apiList[method].JoiSchema
       if (reqJoiSchema.body) {
         const schema = Joi.object(reqJoiSchema.body)
@@ -64,12 +66,12 @@ function sendData(res: any, data: any) {
       if (data in Error) {
         sendData = {
           errno: data,
-          msg: Error[data],
+          msg: Error[data]
         }
       } else {
         sendData = {
           errno: data,
-          msg: '错误未配置',
+          msg: '错误未配置'
         }
       }
       res.status(700).send(sendData)
@@ -81,7 +83,7 @@ function sendData(res: any, data: any) {
       res.send({
         errno: '0',
         msg: 'ok',
-        info: data,
+        info: data
       })
     }
   }
@@ -98,18 +100,18 @@ function sendFault(res: any, msg: any) {
     if (process.env.NODE_ENV === 'test') {
       sendData = {
         errno: -1,
-        msg: msg.stack,
+        msg: msg.stack
       }
     } else {
       if (msg.name === 'ValidationError') {
         sendData = {
           errno: -3,
-          msg: msg.stack,
+          msg: msg.stack
         }
       } else {
         sendData = {
           errno: -1,
-          msg: 'Internal Error',
+          msg: 'Internal Error'
         }
       }
     }
@@ -184,5 +186,5 @@ export default {
   sendData,
   sendFault,
   generateRandomAlphaNum,
-  generateNonceString,
+  generateNonceString
 }

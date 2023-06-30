@@ -17,12 +17,12 @@ import { createLogger } from '@app/logger'
 const logger = createLogger(__filename)
 
 async function initAct() {
-  let returnData = Object.create(null)
+  const returnData = Object.create(null)
 
-  let templates = await common_organizationtemplate.find({})
+  const templates = await common_organizationtemplate.find({})
 
   returnData.templateInfo = []
-  for (let t of templates) {
+  for (const t of templates) {
     returnData.templateInfo.push({
       id: t.organizationtemplate_id,
       text: t.organizationtemplate_name,
@@ -47,8 +47,8 @@ async function initAct() {
 }
 
 async function genMenu(parentId: string): Promise<any> {
-  let return_list = []
-  let queryStr = `SELECT
+  const return_list = []
+  const queryStr = `SELECT
                     a.*, b.api_type, 
                     b.api_function,
                     b.api_path,
@@ -60,8 +60,8 @@ async function genMenu(parentId: string): Promise<any> {
                   WHERE a.parent_id = ?
                   ORDER BY
                     a.systemmenu_index`
-  let menus = await simpleSelect(queryStr, [parentId])
-  for (let m of menus) {
+  const menus = await simpleSelect(queryStr, [parentId])
+  for (const m of menus) {
     let sub_menus = []
     if (m.node_type === GLBConfig.NODE_TYPE.NODE_ROOT) {
       sub_menus = await genMenu(m.systemmenu_id)
@@ -105,20 +105,20 @@ async function genMenu(parentId: string): Promise<any> {
 }
 
 async function searchAct(req: Request) {
-  let doc = common.docValidate(req),
+  const doc = common.docValidate(req),
     returnData = Object.create(null)
 
   let queryStr = 'select * from tbl_common_organization where state = "1" and organization_type = "01"'
-  let replacements = []
+  const replacements = []
 
   if (doc.search_text) {
     queryStr += ' and (organization_name like ? or organization_code like ?)'
-    let search_text = '%' + doc.search_text + '%'
+    const search_text = '%' + doc.search_text + '%'
     replacements.push(search_text)
     replacements.push(search_text)
   }
 
-  let result = await queryWithCount(doc, queryStr, replacements)
+  const result = await queryWithCount(doc, queryStr, replacements)
 
   returnData.total = result.count
   returnData.rows = result.data
@@ -127,7 +127,7 @@ async function searchAct(req: Request) {
 }
 
 async function addAct(req: Request) {
-  let doc = common.docValidate(req)
+  const doc = common.docValidate(req)
   let org = await common_organization.findOne({
     where: [{ organization_code: doc.organization_code }, { organization_name: doc.organization_name }],
   })
@@ -148,7 +148,7 @@ async function addAct(req: Request) {
       await createOrganizationMenu(org.organization_id, doc.organizationtemplate_id, '0', '0')
     }
 
-    let adduser = await common_user
+    const adduser = await common_user
       .create({
         user_type: GLBConfig.USER_TYPE.TYPE_ADMINISTRATOR,
         user_username: doc.organization_code + 'admin',
@@ -165,7 +165,7 @@ async function addAct(req: Request) {
       })
       .save()
 
-    let group = await common_usergroup.findOneBy({
+    const group = await common_usergroup.findOneBy({
       usergroup_code: 'DEFAULT',
     })
     if (group) {
@@ -181,13 +181,13 @@ async function addAct(req: Request) {
 }
 
 async function createOrganizationMenu(organization_id: number, organizationtemplate_id: number, parentId: string, cparentId: string) {
-  let menus = await common_templatemenu.findBy({
+  const menus = await common_templatemenu.findBy({
     organizationtemplate_id: organizationtemplate_id,
     parent_id: parentId,
   })
-  for (let m of menus) {
+  for (const m of menus) {
     if (m.node_type === GLBConfig.NODE_TYPE.NODE_ROOT) {
-      let dm = await common_organizationmenu
+      const dm = await common_organizationmenu
         .create({
           organization_id: organization_id,
           organizationmenu_name: m.templatemenu_name,
@@ -216,7 +216,7 @@ async function createOrganizationMenu(organization_id: number, organizationtempl
 }
 
 async function getOrganizationMenuAct(req: Request) {
-  let doc = common.docValidate(req),
+  const doc = common.docValidate(req),
     returnData = Object.create(null)
 
   returnData.menuInfo = [
@@ -236,8 +236,8 @@ async function getOrganizationMenuAct(req: Request) {
 }
 
 async function genOrganizationMenu(organization_id: number, parentId: string): Promise<any> {
-  let return_list = []
-  let queryStr = `SELECT
+  const return_list = []
+  const queryStr = `SELECT
                     a.*, b.api_type, 
                     b.api_function,
                     b.api_path,
@@ -250,8 +250,8 @@ async function genOrganizationMenu(organization_id: number, parentId: string): P
                   AND a.parent_id = ?
                   ORDER BY
                     a.organizationmenu_index`
-  let menus = await simpleSelect(queryStr, [organization_id, parentId])
-  for (let m of menus) {
+  const menus = await simpleSelect(queryStr, [organization_id, parentId])
+  for (const m of menus) {
     let sub_menus = []
     if (m.node_type === GLBConfig.NODE_TYPE.NODE_ROOT) {
       sub_menus = await genOrganizationMenu(organization_id, m.organizationmenu_id)
@@ -295,7 +295,7 @@ async function genOrganizationMenu(organization_id: number, parentId: string): P
 }
 
 async function addFolderAct(req: Request) {
-  let doc = common.docValidate(req)
+  const doc = common.docValidate(req)
 
   logger.info('add')
 
@@ -313,21 +313,21 @@ async function addFolderAct(req: Request) {
 }
 
 async function addMenusAct(req: Request) {
-  let doc = common.docValidate(req)
+  const doc = common.docValidate(req)
 
-  let menus = await common_organizationmenu.findBy({
+  const menus = await common_organizationmenu.findBy({
     organization_id: doc.organization_id,
     parent_id: doc.parent_id,
   })
 
-  let addItem = []
-  for (let i of doc.items) {
+  const addItem = []
+  for (const i of doc.items) {
     if (_.findIndex(menus, { api_id: i.api_id }) < 0) {
       addItem.push(i)
     }
   }
 
-  for (let i of addItem) {
+  for (const i of addItem) {
     await common_organizationmenu
       .create({
         organization_id: doc.organization_id,
@@ -343,9 +343,9 @@ async function addMenusAct(req: Request) {
 }
 
 async function removeItemAct(req: Request) {
-  let doc = common.docValidate(req)
+  const doc = common.docValidate(req)
 
-  let item = await common_organizationmenu.findOneBy({
+  const item = await common_organizationmenu.findOneBy({
     organizationmenu_id: doc.organizationmenu_id,
   })
 
@@ -361,17 +361,17 @@ async function removeItemAct(req: Request) {
 }
 
 async function rmFolder(organizationmenu_id: number) {
-  let folder = await common_organizationmenu.findOneBy({
+  const folder = await common_organizationmenu.findOneBy({
     organizationmenu_id: organizationmenu_id,
   })
 
   if (folder) {
-    let items = await common_organizationmenu.findBy({
+    const items = await common_organizationmenu.findBy({
       organization_id: folder.organization_id,
       parent_id: folder.organizationmenu_id + '',
     })
 
-    for (let i of items) {
+    for (const i of items) {
       if (i.node_type === '01') {
         await i.remove()
       } else {

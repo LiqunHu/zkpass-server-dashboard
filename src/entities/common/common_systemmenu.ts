@@ -1,8 +1,8 @@
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm'
+import { Entity, PrimaryGeneratedColumn, Column, BaseEntity } from 'typeorm'
 import { base_entity } from '@/entities/base_entity'
 
 @Entity({ name: 'tbl_common_systemmenu' })
-export class common_systemmenu {
+export class common_systemmenu extends BaseEntity {
   @PrimaryGeneratedColumn({ comment: '主键' })
   systemmenu_id: number
 
@@ -24,6 +24,6 @@ export class common_systemmenu {
   @Column({ default: '', length: 30, comment: '父节点id 0为根节点' })
   parent_id: string
 
-  @Column(() => base_entity , { prefix: '' })
+  @Column(() => base_entity, { prefix: '' })
   base: base_entity
 }

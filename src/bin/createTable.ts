@@ -3,11 +3,11 @@ import { SnakeNamingStrategy } from 'typeorm-naming-strategies'
 import config from 'config'
 import { dataSource } from '@/app/db'
 
-let table = 'src/entities/sbt/sbt_task.ts'
+const table = 'src/entities/common/common_usergroupmenu.ts'
 // let connection: Connection | null = null
 export async function createDB() {
   if (table) {
-    let dataSource = new DataSource({
+    const dataSource = new DataSource({
       type: 'mysql',
       host: config.get<string>('mysql.host'),
       port: config.get<number>('mysql.port'),
@@ -23,7 +23,7 @@ export async function createDB() {
   }
 }
 
-;(async () => {
+(async () => {
   await createDB()
   process.exit(0)
 })()

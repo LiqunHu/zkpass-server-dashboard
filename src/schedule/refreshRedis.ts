@@ -6,13 +6,13 @@ import { createLogger } from '@app/logger'
 const logger = createLogger(__filename)
 
 async function refreshRedis() {
-  let apiList = await simpleSelect(
+  const apiList = await simpleSelect(
     'select api_function, auth_flag from tbl_common_api where state = "1" and api_function != ""',
     []
   )
 
-  let apis = Object.create(null)
-  for (let a of apiList) {
+  const apis = Object.create(null)
+  for (const a of apiList) {
     apis[a.api_function] = a.auth_flag
   }
 

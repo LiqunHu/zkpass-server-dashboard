@@ -9,17 +9,17 @@ import { createLogger } from '@app/logger'
 const logger = createLogger(__filename)
 
 async function genSystemTokenAct(req: Request) {
-  let doc = common.docValidate(req)
+  const doc = common.docValidate(req)
 
-  let user = await common_user.findOneBy({
+  const user = await common_user.findOneBy({
     user_id: doc.user_id,
     user_type: GLBConfig.USER_TYPE.TYPE_SYSTEM,
   })
   if (!user) {
     return common.error('auth_01')
   }
-  let session_token = authority.user2token('SYSTEM', user.user_id)
-  let loginData = await AuthServer.loginInit(user, session_token, 'SYSTEM')
+  const session_token = authority.user2token('SYSTEM', user.user_id)
+  const loginData = await AuthServer.loginInit(user, session_token, 'SYSTEM')
   if (loginData) {
     loginData.Authorization = session_token
     return common.success({

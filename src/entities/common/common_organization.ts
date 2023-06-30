@@ -1,8 +1,8 @@
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm'
+import { Entity, PrimaryGeneratedColumn, Column, BaseEntity } from 'typeorm'
 import { base_entity } from '@/entities/base_entity'
 
 @Entity({ name: 'tbl_common_organization' })
-export class common_organization {
+export class common_organization extends BaseEntity {
   @PrimaryGeneratedColumn({ comment: '主键' })
   organization_id: number
 
@@ -49,11 +49,11 @@ export class common_organization {
   organization_description: string
 
   @Column({ type: 'json', nullable: true, comment: '机构配置' })
-  organization_config: Object
+  organization_config: object
 
   @Column({ default: 0, comment: '机构排序' })
   organization_index: number
 
-  @Column(() => base_entity , { prefix: '' })
+  @Column(() => base_entity, { prefix: '' })
   base: base_entity
 }

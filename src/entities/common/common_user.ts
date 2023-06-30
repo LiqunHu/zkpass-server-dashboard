@@ -3,17 +3,18 @@ import {
   PrimaryGeneratedColumn,
   Column,
   ValueTransformer,
+  BaseEntity
 } from 'typeorm'
 import CryptoJS from 'crypto-js'
 import { base_entity } from '@/entities/base_entity'
 
 const toMD5Hash: ValueTransformer = {
   from: (value: string) => value,
-  to: (value: string) => CryptoJS.MD5(value).toString(),
+  to: (value: string) => CryptoJS.MD5(value).toString()
 }
 
 @Entity({ name: 'tbl_common_user' })
-export class common_user {
+export class common_user extends BaseEntity {
   @PrimaryGeneratedColumn('uuid', { comment: '主键' })
   user_id: string
 
@@ -74,6 +75,6 @@ export class common_user {
   @Column({ length: 200, default: '', comment: '备注' })
   user_remark: string
 
-  @Column(() => base_entity , { prefix: '' })
+  @Column(() => base_entity, { prefix: '' })
   base: base_entity
 }

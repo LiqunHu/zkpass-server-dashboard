@@ -15,7 +15,7 @@ import { createLogger } from '@app/logger'
 const logger = createLogger(__filename)
 
 async function initAct() {
-  let returnData = {
+  const returnData = {
     authInfo: GLBConfig.AUTHINFO,
     tfInfo: GLBConfig.TFINFO,
   }
@@ -24,7 +24,7 @@ async function initAct() {
 }
 
 async function searchAct() {
-  let menus = [
+  const menus = [
     {
       name: '根目录',
       systemmenu_id: 0,
@@ -37,8 +37,8 @@ async function searchAct() {
 }
 
 async function genMenu(parentId: string): Promise<any> {
-  let return_list = []
-  let queryStr = `SELECT
+  const return_list = []
+  const queryStr = `SELECT
                     a.*, b.api_type, 
                     b.api_function,
                     b.api_path,
@@ -50,8 +50,8 @@ async function genMenu(parentId: string): Promise<any> {
                   WHERE a.parent_id = ?
                   ORDER BY
                     a.systemmenu_index`
-  let menus = await simpleSelect(queryStr, [parentId])
-  for (let m of menus) {
+  const menus = await simpleSelect(queryStr, [parentId])
+  for (const m of menus) {
     let sub_menus = []
     if (m.node_type === GLBConfig.NODE_TYPE.NODE_ROOT) {
       sub_menus = await genMenu(m.systemmenu_id)
@@ -90,8 +90,8 @@ async function genMenu(parentId: string): Promise<any> {
 }
 
 async function addFolderAct(req: Request) {
-  let doc = common.docValidate(req)
-  let folder = await common_systemmenu.findOneBy({
+  const doc = common.docValidate(req)
+  const folder = await common_systemmenu.findOneBy({
       systemmenu_name: doc.systemmenu_name,
   })
 
@@ -110,9 +110,9 @@ async function addFolderAct(req: Request) {
 }
 
 async function modifyFolderAct(req: Request) {
-  let doc = common.docValidate(req)
+  const doc = common.docValidate(req)
 
-  let folder = await common_systemmenu.findOneBy({
+  const folder = await common_systemmenu.findOneBy({
     systemmenu_id: doc.systemmenu_id,
   })
 
@@ -128,13 +128,13 @@ async function modifyFolderAct(req: Request) {
 }
 
 async function addMenuAct(req: Request) {
-  let doc = common.docValidate(req)
+  const doc = common.docValidate(req)
 
-  let afolder = await common_systemmenu.findOneBy({
+  const afolder = await common_systemmenu.findOneBy({
     systemmenu_name: doc.systemmenu_name,
   })
 
-  let aapi = await common_api.findOneBy({
+  const aapi = await common_api.findOneBy({
     api_name: doc.systemmenu_name,
   })
 
@@ -161,7 +161,7 @@ async function addMenuAct(req: Request) {
       auth_flag = doc.auth_flag
     }
 
-    let api = await common_api.create({
+    const api = await common_api.create({
       api_name: doc.systemmenu_name,
       api_type: doc.api_type,
       api_path: api_path,
@@ -183,18 +183,18 @@ async function addMenuAct(req: Request) {
 }
 
 async function modifyMenuAct(req: Request) {
-  let doc = common.docValidate(req)
+  const doc = common.docValidate(req)
 
-  let menum = await common_systemmenu.findOneBy({
+  const menum = await common_systemmenu.findOneBy({
     systemmenu_id: doc.systemmenu_id,
   })
 
   if (menum) {
-    let api = await common_api.findOneBy({
+    const api = await common_api.findOneBy({
       api_id: menum.api_id,
     })
 
-    let orCond: { [index: string]: any }[] = [
+    const orCond: { [index: string]: any }[] = [
       { api_name: doc.systemmenu_name, api_id: Not(menum.api_id) },
     ]
     if (doc.api_function) {
@@ -204,7 +204,7 @@ async function modifyMenuAct(req: Request) {
       orCond.push({ api_path: doc.api_path, api_id: Not(menum.api_id) })
     }
 
-    let aapi = await common_api.findOne({
+    const aapi = await common_api.findOne({
       where: orCond,
     })
     if (aapi) {
@@ -246,17 +246,17 @@ async function modifyMenuAct(req: Request) {
 }
 
 async function removeAct(req: Request) {
-  let doc = common.docValidate(req)
-  let menum = await common_systemmenu.findOneBy({
+  const doc = common.docValidate(req)
+  const menum = await common_systemmenu.findOneBy({
     systemmenu_id: doc.systemmenu_id,
   })
 
-  let groups = await common_usergroup.findBy({
+  const groups = await common_usergroup.findBy({
     organization_id: 0,
   })
 
-  let gids = []
-  for (let g of groups) {
+  const gids = []
+  for (const g of groups) {
     gids.push(g.usergroup_id)
   }
 
@@ -280,7 +280,7 @@ async function removeAct(req: Request) {
       }
       return common.success()
     } else {
-      let chcount = await common_systemmenu.count({
+      const chcount = await common_systemmenu.count({
         where: {
           parent_id: doc.systemmenu_id,
         },

@@ -1,8 +1,8 @@
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm'
+import { Entity, PrimaryGeneratedColumn, Column, BaseEntity } from 'typeorm'
 import { base_entity } from '@/entities/base_entity'
 
 @Entity({ name: 'tbl_common_api' })
-export class common_api {
+export class common_api extends BaseEntity{
   @PrimaryGeneratedColumn({ comment: '主键' })
   api_id: number
 

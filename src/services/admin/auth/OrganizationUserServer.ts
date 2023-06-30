@@ -8,20 +8,20 @@ import {
   common_user,
   common_usergroup,
   common_user_groups,
-  common_organization_user,
+  common_organization_user
 } from '@entities/common'
 import { createLogger } from '@app/logger'
 const logger = createLogger(__filename)
 
 async function initAct(req: Request) {
-  let user = req.user,
+  const user = req.user,
     returnData = Object.create(null)
 
   if (!user.default_organization) {
     return common.error('org_02')
   }
 
-  let groups: {
+  const groups: {
     id: number
     text: string
     disabled: boolean
@@ -31,24 +31,24 @@ async function initAct(req: Request) {
     parentId: string,
     lev: number
   ) {
-    let actgroups = await common_usergroup.findBy({
+    const actgroups = await common_usergroup.findBy({
       organization_id: organization_id,
       parent_id: parentId,
-      usergroup_type: GLBConfig.USER_TYPE.TYPE_DEFAULT,
+      usergroup_type: GLBConfig.USER_TYPE.TYPE_DEFAULT
     })
-    for (let g of actgroups) {
+    for (const g of actgroups) {
       if (g.node_type === GLBConfig.NODE_TYPE.NODE_ROOT) {
         groups.push({
           id: g.usergroup_id,
           text: '--'.repeat(lev) + g.usergroup_name,
-          disabled: true,
+          disabled: true
         })
         await genUserGroup(organization_id, g.usergroup_id + '', lev + 1)
       } else {
         groups.push({
           id: g.usergroup_id,
           text: '--'.repeat(lev) + g.usergroup_name,
-          disabled: false,
+          disabled: false
         })
       }
     }
@@ -60,7 +60,7 @@ async function initAct(req: Request) {
 }
 
 async function searchAct(req: Request) {
-  let user = req.user,
+  const user = req.user,
     doc = common.docValidate(req),
     returnData = Object.create(null)
 
@@ -70,39 +70,39 @@ async function searchAct(req: Request) {
 
   let queryStr = `select b.user_id , b.user_name , b.user_phone , b.user_email , b.user_avatar from tbl_common_organization_user a , tbl_common_user b 
   WHERE a.organization_id = ? AND a.user_id = b.user_id AND b.state = "1" AND b.user_type = "00"`
-  let replacements = [user.default_organization]
+  const replacements = [user.default_organization]
 
   if (doc.search_text) {
     queryStr +=
       ' and (b.user_email like ? or b.user_phone like ? or user_name like ?)'
-    let search_text = '%' + doc.search_text + '%'
+    const search_text = '%' + doc.search_text + '%'
     replacements.push(search_text)
     replacements.push(search_text)
     replacements.push(search_text)
   }
 
-  let result = await queryWithCount(doc, queryStr, replacements)
+  const result = await queryWithCount(doc, queryStr, replacements)
 
   returnData.total = result.count
   returnData.rows = []
 
-  let domaingroups = await common_usergroup.findBy({
+  const domaingroups = await common_usergroup.findBy({
     organization_id: user.default_organization,
-    node_type: '01',
+    node_type: '01'
   })
 
-  let ids: number[] = []
-  for (let g of domaingroups) {
+  const ids: number[] = []
+  for (const g of domaingroups) {
     ids.push(g.usergroup_id)
   }
 
-  for (let ap of result.data) {
+  for (const ap of result.data) {
     ap.user_groups = []
-    let user_groups = await common_user_groups.findBy({
+    const user_groups = await common_user_groups.findBy({
       user_id: ap.user_id,
-      usergroup_id: Not(In(ids)),
+      usergroup_id: Not(In(ids))
     })
-    for (let g of user_groups) {
+    for (const g of user_groups) {
       ap.user_groups.push(g.usergroup_id)
     }
     returnData.rows.push(ap)
@@ -112,60 +112,62 @@ async function searchAct(req: Request) {
 }
 
 async function addAct(req: Request) {
-  let user = req.user,
+  const user = req.user,
     doc = common.docValidate(req)
 
   if (!user.default_organization) {
     return common.error('org_02')
   }
   if (!_.isEmpty(doc.user_id)) {
-    let orguser = await common_organization_user.findOneBy({
+    const orguser = await common_organization_user.findOneBy({
       organization_id: user.default_organization,
-      user_id: doc.user_id,
+      user_id: doc.user_id
     })
     if (!orguser) {
       await common_organization_user.update(
         {
-          organization_user_default_flag: '0',
+          organization_user_default_flag: '0'
         },
         {
-          user_id: doc.user_id,
+          user_id: doc.user_id
         }
       )
 
-      await common_organization_user.create({
-        organization_id: user.default_organization,
-        user_id: doc.user_id,
-        organization_user_default_flag: '1',
-      }).save()
+      await common_organization_user
+        .create({
+          organization_id: user.default_organization,
+          user_id: doc.user_id,
+          organization_user_default_flag: '1'
+        })
+        .save()
     }
   }
   return common.success()
 }
 
 async function modifyAct(req: Request) {
-  let user = req.user,
+  const user = req.user,
     doc = common.docValidate(req)
 
   if (!user.default_organization) {
     return common.error('org_02')
   }
 
-  let orguser = await common_organization_user.findOneBy({
+  const orguser = await common_organization_user.findOneBy({
     organization_id: user.default_organization,
-    user_id: doc.user_id,
+    user_id: doc.user_id
   })
 
   if (orguser) {
-    let modiuser = await common_user.findOneBy({
+    const modiuser = await common_user.findOneBy({
       user_id: doc.user_id,
-      state: GLBConfig.ENABLE,
+      base: { state: GLBConfig.ENABLE }
     })
     if (modiuser) {
       if (doc.user_email) {
-        let emailuser = await common_user.findOneBy({
+        const emailuser = await common_user.findOneBy({
           user_id: Not(modiuser.user_id),
-          user_email: doc.user_email,
+          user_email: doc.user_email
         })
         if (emailuser) {
           return common.error('operator_02')
@@ -173,9 +175,9 @@ async function modifyAct(req: Request) {
       }
 
       if (doc.user_phone) {
-        let phoneuser = await common_user.findOneBy({
-            user_id: Not(modiuser.user_id),
-            user_phone: doc.user_phone,
+        const phoneuser = await common_user.findOneBy({
+          user_id: Not(modiuser.user_id),
+          user_phone: doc.user_phone
         })
         if (phoneuser) {
           return common.error('operator_02')
@@ -187,26 +189,28 @@ async function modifyAct(req: Request) {
       modiuser.user_name = doc.user_name
       await modiuser.save()
 
-      let domaingroups = await common_usergroup.findBy({
+      const domaingroups = await common_usergroup.findBy({
         organization_id: user.default_organization,
-        node_type: '01',
+        node_type: '01'
       })
 
-      let ids = []
-      for (let g of domaingroups) {
+      const ids = []
+      for (const g of domaingroups) {
         ids.push(g.usergroup_id)
       }
 
       await common_user_groups.delete({
         user_id: modiuser.user_id,
-        usergroup_id: In(ids),
+        usergroup_id: In(ids)
       })
 
-      for (let gid of doc.user_groups) {
-        await common_user_groups.create({
-          user_id: modiuser.user_id,
-          usergroup_id: gid,
-        }).save()
+      for (const gid of doc.user_groups) {
+        await common_user_groups
+          .create({
+            user_id: modiuser.user_id,
+            usergroup_id: gid
+          })
+          .save()
       }
 
       logger.debug('modify success')
@@ -220,23 +224,23 @@ async function modifyAct(req: Request) {
 }
 
 async function deleteAct(req: Request) {
-  let user = req.user,
+  const user = req.user,
     doc = common.docValidate(req)
 
   if (!user.default_organization) {
     return common.error('org_02')
   }
 
-  let orguser = await common_organization_user.findOneBy({
+  const orguser = await common_organization_user.findOneBy({
     organization_id: user.default_organization,
-    user_id: doc.user_id,
+    user_id: doc.user_id
   })
 
   if (orguser) {
     if (orguser.organization_user_default_flag === '1') {
       await orguser.remove()
-      let dforguser = await common_organization_user.findOneBy({
-        user_id: doc.user_id,
+      const dforguser = await common_organization_user.findOneBy({
+        user_id: doc.user_id
       })
       if (dforguser) {
         dforguser.organization_user_default_flag = '1'
@@ -255,5 +259,5 @@ export default {
   searchAct,
   addAct,
   modifyAct,
-  deleteAct,
+  deleteAct
 }

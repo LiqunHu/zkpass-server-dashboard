@@ -1,8 +1,8 @@
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm'
+import { Entity, PrimaryGeneratedColumn, Column, BaseEntity } from 'typeorm'
 import { base_entity } from '@/entities/base_entity'
 
 @Entity({ name: 'tbl_common_user_wechat' })
-export class common_user_wechat {
+export class common_user_wechat extends BaseEntity {
   @PrimaryGeneratedColumn({ comment: '主键' })
   user_wechat_id: number
 
@@ -39,10 +39,10 @@ export class common_user_wechat {
   @Column({
     default: '0',
     length: 10,
-    comment: '微信推送免打扰标示 0关闭免打扰 1打开免打扰',
+    comment: '微信推送免打扰标示 0关闭免打扰 1打开免打扰'
   })
   user_wechat_disturbing_flag: string
 
-  @Column(() => base_entity , { prefix: '' })
+  @Column(() => base_entity, { prefix: '' })
   base: base_entity
 }

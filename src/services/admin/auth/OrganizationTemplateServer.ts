@@ -11,7 +11,7 @@ import { createLogger } from '@app/logger'
 const logger = createLogger(__filename)
 
 async function initAct() {
-  let returnData = Object.create(null)
+  const returnData = Object.create(null)
 
   returnData.menuInfo = [
     {
@@ -31,8 +31,8 @@ async function initAct() {
   return common.success(returnData)
 }
 async function genMenu(parentId: string): Promise<any> {
-  let return_list = []
-  let queryStr = `SELECT
+  const return_list = []
+  const queryStr = `SELECT
                     a.*, b.api_type, 
                     b.api_function,
                     b.api_path,
@@ -44,8 +44,8 @@ async function genMenu(parentId: string): Promise<any> {
                   WHERE a.parent_id = ?
                   ORDER BY
                     a.systemmenu_index`
-  let menus = await simpleSelect(queryStr, [parentId])
-  for (let m of menus) {
+  const menus = await simpleSelect(queryStr, [parentId])
+  for (const m of menus) {
     let sub_menus = []
     if (m.node_type === GLBConfig.NODE_TYPE.NODE_ROOT) {
       sub_menus = await genMenu(m.systemmenu_id + '')
@@ -89,26 +89,26 @@ async function genMenu(parentId: string): Promise<any> {
 }
 
 async function getTemplateAct(req: Request) {
-  let doc = common.docValidate(req)
+  const doc = common.docValidate(req)
 
   let queryStr = `select * from tbl_common_organizationtemplate where '1' = '1' and state = '1'`
-  let replacements = []
+  const replacements = []
 
   if (doc.search_text) {
     queryStr += ' and (organizationtemplate_name like ?)'
-    let search_text = '%' + doc.search_text + '%'
+    const search_text = '%' + doc.search_text + '%'
     replacements.push(search_text)
   }
 
-  let result = await simpleSelect(queryStr, replacements)
+  const result = await simpleSelect(queryStr, replacements)
 
   return common.success(result)
 }
 
 async function addTemplateAct(req: Request) {
-  let doc = common.docValidate(req)
+  const doc = common.docValidate(req)
 
-  let template = await common_organizationtemplate.findOneBy({
+  const template = await common_organizationtemplate.findOneBy({
     organizationtemplate_name: doc.organizationtemplate_name,
   })
 
@@ -123,7 +123,7 @@ async function addTemplateAct(req: Request) {
 }
 
 async function removeTemplateAct(req: Request) {
-  let doc = common.docValidate(req)
+  const doc = common.docValidate(req)
 
   await common_templatemenu.delete({
     organizationtemplate_id: doc.organizationtemplate_id,
@@ -137,7 +137,7 @@ async function removeTemplateAct(req: Request) {
 }
 
 async function getTemplateMenuAct(req: Request) {
-  let doc = common.docValidate(req),
+  const doc = common.docValidate(req),
     returnData = Object.create(null)
 
   returnData.menuInfo = [
@@ -163,8 +163,8 @@ async function genTemplateMenu(
   organizationtemplate_id: number,
   parentId: string
 ): Promise<any> {
-  let return_list = []
-  let queryStr = `SELECT
+  const return_list = []
+  const queryStr = `SELECT
                     a.*, b.api_type, 
                     b.api_function,
                     b.api_path,
@@ -177,8 +177,8 @@ async function genTemplateMenu(
                   AND a.parent_id = ?
                   ORDER BY
                     a.templatemenu_index`
-  let menus = await simpleSelect(queryStr, [organizationtemplate_id, parentId])
-  for (let m of menus) {
+  const menus = await simpleSelect(queryStr, [organizationtemplate_id, parentId])
+  for (const m of menus) {
     let sub_menus = []
     if (m.node_type === GLBConfig.NODE_TYPE.NODE_ROOT) {
       sub_menus = await genTemplateMenu(
@@ -225,7 +225,7 @@ async function genTemplateMenu(
 }
 
 async function addFolderAct(req: Request) {
-  let doc = common.docValidate(req)
+  const doc = common.docValidate(req)
 
   logger.info('add')
 
@@ -241,21 +241,21 @@ async function addFolderAct(req: Request) {
 }
 
 async function addMenusAct(req: Request) {
-  let doc = common.docValidate(req)
+  const doc = common.docValidate(req)
 
-  let menus = await common_templatemenu.findBy({
+  const menus = await common_templatemenu.findBy({
     organizationtemplate_id: doc.organizationtemplate_id,
     parent_id: doc.parent_id,
   })
 
-  let addItem = []
-  for (let i of doc.items) {
+  const addItem = []
+  for (const i of doc.items) {
     if (_.findIndex(menus, { api_id: i.api_id }) < 0) {
       addItem.push(i)
     }
   }
 
-  for (let i of addItem) {
+  for (const i of addItem) {
     await common_templatemenu.create({
       organizationtemplate_id: doc.organizationtemplate_id,
       templatemenu_name: i.templatemenu_name,
@@ -269,9 +269,9 @@ async function addMenusAct(req: Request) {
 }
 
 async function removeItemAct(req: Request) {
-  let doc = common.docValidate(req)
+  const doc = common.docValidate(req)
 
-  let item = await common_templatemenu.findOneBy({
+  const item = await common_templatemenu.findOneBy({
     templatemenu_id: doc.templatemenu_id,
   })
 
@@ -287,17 +287,17 @@ async function removeItemAct(req: Request) {
 }
 
 async function rmFolder(templatemenu_id: number) {
-  let folder = await common_templatemenu.findOneBy({
+  const folder = await common_templatemenu.findOneBy({
     templatemenu_id: templatemenu_id,
   })
 
   if (folder) {
-    let items = await common_templatemenu.findBy({
+    const items = await common_templatemenu.findBy({
       organizationtemplate_id: folder.organizationtemplate_id,
       parent_id: folder.templatemenu_id + '',
     })
 
-    for (let i of items) {
+    for (const i of items) {
       if (i.node_type === '01') {
         await i.remove()
       } else {

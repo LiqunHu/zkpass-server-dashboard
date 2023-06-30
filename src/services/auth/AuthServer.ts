@@ -9,7 +9,12 @@ import phone from 'phone'
 import { simpleSelect } from '@app/db'
 import common from '@util/Common'
 import GLBConfig from '@util/GLBConfig'
-import { common_user, common_usergroup, common_user_groups, common_user_wechat } from '@entities/common'
+import {
+  common_user,
+  common_usergroup,
+  common_user_groups,
+  common_user_wechat
+} from '@entities/common'
 import { createLogger } from '@app/logger'
 import { Web3 } from 'web3'
 const httpRPC = 'https://data-seed-prebsc-1-s1.binance.org:8545'
@@ -18,14 +23,19 @@ const web3js = new Web3(httpRPC)
 const logger = createLogger(__filename)
 
 async function signinAct(req: Request) {
-  let doc = await common.docValidate(req)
+  const doc = await common.docValidate(req)
 
-  if (doc.login_type === 'WEB' || doc.login_type === 'ADMIN' || doc.login_type === 'MOBILE' || doc.login_type === 'SYSTEM') {
-    let user = await common_user.findOne({
+  if (
+    doc.login_type === 'WEB' ||
+    doc.login_type === 'ADMIN' ||
+    doc.login_type === 'MOBILE' ||
+    doc.login_type === 'SYSTEM'
+  ) {
+    const user = await common_user.findOne({
       where: [
-        { user_phone: doc.username, state: GLBConfig.ENABLE },
-        { user_username: doc.username, state: GLBConfig.ENABLE },
-      ],
+        { user_phone: doc.username, base: { state: GLBConfig.ENABLE } },
+        { user_username: doc.username, base: { state: GLBConfig.ENABLE } }
+      ]
     })
 
     if (!user) {
@@ -36,11 +46,17 @@ async function signinAct(req: Request) {
       return common.error('auth_03')
     }
 
-    let decrypted = authority.aesDecryptModeECB(doc.identify_code, user.user_password)
+    const decrypted = authority.aesDecryptModeECB(
+      doc.identify_code,
+      user.user_password
+    )
 
-    if (decrypted != '' && (decrypted === user.user_username || decrypted === user.user_phone)) {
-      let session_token = authority.user2token(doc.login_type, user.user_id)
-      let loginData = await loginInit(user, session_token, doc.login_type)
+    if (
+      decrypted != '' &&
+      (decrypted === user.user_username || decrypted === user.user_phone)
+    ) {
+      const session_token = authority.user2token(doc.login_type, user.user_id)
+      const loginData = await loginInit(user, session_token, doc.login_type)
 
       if (loginData) {
         loginData.Authorization = session_token
@@ -62,11 +78,11 @@ async function signinAct(req: Request) {
 }
 
 async function captchaAct() {
-  let captcha = svgCaptcha.create({
+  const captcha = svgCaptcha.create({
     size: 4,
     ignoreChars: '0o1i',
     noise: 2,
-    color: true,
+    color: true
   })
 
   let code = captcha.text
@@ -74,11 +90,11 @@ async function captchaAct() {
     code = 'aaaa'
   }
 
-  let key = GLBConfig.REDIS_KEYS.CAPTCHA + '_' + uuidV1().replace(/-/g, '')
+  const key = GLBConfig.REDIS_KEYS.CAPTCHA + '_' + uuidV1().replace(/-/g, '')
   await redisClient.set(
     key,
     {
-      code: code,
+      code: code
     },
     'EX',
     config.get<number>('security.CAPTCHA_TOKEN_AGE')
@@ -89,7 +105,7 @@ async function captchaAct() {
 }
 
 async function loginSmsAct(req: Request) {
-  let doc = common.docValidate(req)
+  const doc = common.docValidate(req)
 
   if (!doc.key) {
     return common.error('auth_04')
@@ -97,7 +113,7 @@ async function loginSmsAct(req: Request) {
   if (!doc.code) {
     return common.error('auth_04')
   }
-  let captchaData = await redisClient.get(doc.key)
+  const captchaData = await redisClient.get(doc.key)
   if (!captchaData) {
     return common.error('auth_04')
   }
@@ -110,10 +126,10 @@ async function loginSmsAct(req: Request) {
   if (process.env.NODE_ENV === 'dev') {
     code = '1111'
   }
-  let smsExpiredTime = config.get<number>('security.SMS_TOKEN_AGE')
-  let key = [GLBConfig.REDIS_KEYS.SMS, doc.user_phone].join('_')
+  const smsExpiredTime = config.get<number>('security.SMS_TOKEN_AGE')
+  const key = [GLBConfig.REDIS_KEYS.SMS, doc.user_phone].join('_')
 
-  let liveTime = await redisClient.ttl(key)
+  const liveTime = await redisClient.ttl(key)
   logger.debug(liveTime)
   logger.debug(code)
   if (liveTime > 0) {
@@ -129,8 +145,8 @@ async function loginSmsAct(req: Request) {
         SignName: '京瀚科技',
         TemplateCode: 'SMS_175580288',
         TemplateParam: JSON.stringify({
-          code: code,
-        }),
+          code: code
+        })
       })
     } catch (error) {
       logger.error(error)
@@ -141,7 +157,7 @@ async function loginSmsAct(req: Request) {
   await redisClient.set(
     key,
     {
-      code: code,
+      code: code
     },
     'EX',
     smsExpiredTime
@@ -151,10 +167,10 @@ async function loginSmsAct(req: Request) {
 }
 
 async function signinBySmsAct(req: Request) {
-  let doc = common.docValidate(req)
+  const doc = common.docValidate(req)
 
-  let msgkey = [GLBConfig.REDIS_KEYS.SMS, doc.user_phone].join('_')
-  let rdsData = await redisClient.get(msgkey)
+  const msgkey = [GLBConfig.REDIS_KEYS.SMS, doc.user_phone].join('_')
+  const rdsData = await redisClient.get(msgkey)
 
   if (!rdsData) {
     return common.error('auth_04')
@@ -162,12 +178,12 @@ async function signinBySmsAct(req: Request) {
     return common.error('auth_04')
   } else {
     let user = await common_user.findOneBy({
-      user_phone: doc.user_phone,
+      user_phone: doc.user_phone
     })
 
     if (!user) {
-      let group = await common_usergroup.findOneBy({
-        usergroup_code: 'DEFAULT',
+      const group = await common_usergroup.findOneBy({
+        usergroup_code: 'DEFAULT'
       })
 
       if (!group) {
@@ -180,25 +196,25 @@ async function signinBySmsAct(req: Request) {
           user_username: doc.user_phone,
           user_phone: doc.user_phone,
           user_password: common.generateRandomAlphaNum(6),
-          user_password_error: -1,
+          user_password_error: -1
         })
         .save()
 
       await common_user_groups
         .create({
           user_id: user.user_id,
-          usergroup_id: group.usergroup_id,
+          usergroup_id: group.usergroup_id
         })
         .save()
 
       user = await common_user.findOneBy({
-        user_id: user.user_id,
+        user_id: user.user_id
       })
     }
 
     if (user) {
-      let session_token = authority.user2token(doc.login_type, user.user_id)
-      let loginData = await loginInit(user, session_token, doc.login_type)
+      const session_token = authority.user2token(doc.login_type, user.user_id)
+      const loginData = await loginInit(user, session_token, doc.login_type)
 
       if (loginData) {
         loginData.Authorization = session_token
@@ -215,15 +231,15 @@ async function signinBySmsAct(req: Request) {
 }
 
 async function signinByAccountAct(req: Request) {
-  let doc = common.docValidate(req)
+  const doc = common.docValidate(req)
   const signAddress = web3js.eth.accounts.recover('join zpkass', doc.signature)
   if (doc.address == signAddress) {
     let user = await common_user.findOneBy({
-      user_account: doc.address,
+      user_account: doc.address
     })
     if (!user) {
-      let group = await common_usergroup.findOneBy({
-        usergroup_code: 'DEFAULT',
+      const group = await common_usergroup.findOneBy({
+        usergroup_code: 'DEFAULT'
       })
 
       if (!group) {
@@ -233,27 +249,27 @@ async function signinByAccountAct(req: Request) {
       user = await common_user
         .create({
           user_type: GLBConfig.USER_TYPE.TYPE_DEFAULT,
-          user_account:doc.address,
+          user_account: doc.address,
           user_password: common.generateRandomAlphaNum(6),
-          user_password_error: -1,
+          user_password_error: -1
         })
         .save()
 
       await common_user_groups
         .create({
           user_id: user.user_id,
-          usergroup_id: group.usergroup_id,
+          usergroup_id: group.usergroup_id
         })
         .save()
 
       user = await common_user.findOneBy({
-        user_id: user.user_id,
+        user_id: user.user_id
       })
     }
 
     if (user) {
-      let session_token = authority.user2token(doc.login_type, user.user_id)
-      let loginData = await loginInit(user, session_token, doc.login_type)
+      const session_token = authority.user2token(doc.login_type, user.user_id)
+      const loginData = await loginInit(user, session_token, doc.login_type)
 
       if (loginData) {
         loginData.Authorization = session_token
@@ -271,9 +287,9 @@ async function signinByAccountAct(req: Request) {
 }
 
 async function signoutAct(req: Request) {
-  let tokenData = await authority.tokenVerify(req)
+  const tokenData = await authority.tokenVerify(req)
   if (tokenData) {
-    let type = tokenData.type,
+    const type = tokenData.type,
       user_id = tokenData.user_id
     await redisClient.del([GLBConfig.REDIS_KEYS.AUTH, type, user_id].join('_'))
   }
@@ -281,9 +297,12 @@ async function signoutAct(req: Request) {
 }
 
 async function userExistAct(req: Request) {
-  let doc = common.docValidate(req)
-  let user = await common_user.findOne({
-    where: [{ user_phone: doc.user_username }, { user_username: doc.user_username }],
+  const doc = common.docValidate(req)
+  const user = await common_user.findOne({
+    where: [
+      { user_phone: doc.user_username },
+      { user_username: doc.user_username }
+    ]
   })
   if (user) {
     return common.error('auth_02')
@@ -293,8 +312,8 @@ async function userExistAct(req: Request) {
 }
 
 async function registerSmsAct(req: Request) {
-  let doc = common.docValidate(req),
-    msgphone = ''
+  const doc = common.docValidate(req)
+  let msgphone = ''
 
   if (!doc.key) {
     return common.error('auth_04')
@@ -302,7 +321,7 @@ async function registerSmsAct(req: Request) {
   if (!doc.code) {
     return common.error('auth_04')
   }
-  let captchaData = await redisClient.get(doc.key)
+  const captchaData = await redisClient.get(doc.key)
   if (!captchaData) {
     return common.error('auth_04')
   }
@@ -311,7 +330,7 @@ async function registerSmsAct(req: Request) {
     return common.error('auth_04')
   }
 
-  let phoneCheck = phone('+' + doc.country_code + doc.user_phone)
+  const phoneCheck = phone('+' + doc.country_code + doc.user_phone)
   if (!phoneCheck.isValid) {
     return common.error('auth_13')
   }
@@ -330,10 +349,10 @@ async function registerSmsAct(req: Request) {
   if (process.env.NODE_ENV === 'dev') {
     code = '1111'
   }
-  let smsExpiredTime = config.get<number>('security.SMS_TOKEN_AGE')
-  let key = [GLBConfig.REDIS_KEYS.SMS, msgphone].join('_')
+  const smsExpiredTime = config.get<number>('security.SMS_TOKEN_AGE')
+  const key = [GLBConfig.REDIS_KEYS.SMS, msgphone].join('_')
 
-  let liveTime = await redisClient.ttl(key)
+  const liveTime = await redisClient.ttl(key)
   logger.debug(liveTime)
   logger.debug(code)
   logger.debug(msgphone)
@@ -350,8 +369,8 @@ async function registerSmsAct(req: Request) {
         SignName: '京瀚科技',
         TemplateCode: 'SMS_175580288',
         TemplateParam: JSON.stringify({
-          code: code,
-        }),
+          code: code
+        })
       })
     } catch (error) {
       logger.error(error)
@@ -362,7 +381,7 @@ async function registerSmsAct(req: Request) {
   await redisClient.set(
     key,
     {
-      code: code,
+      code: code
     },
     'EX',
     smsExpiredTime
@@ -372,10 +391,13 @@ async function registerSmsAct(req: Request) {
 }
 
 async function registerAct(req: Request) {
-  let doc = common.docValidate(req),
-    msgphone = ''
+  const doc = common.docValidate(req)
+  let msgphone = ''
   let user = await common_user.findOne({
-    where: [{ user_phone: doc.user_phone }, { user_username: doc.user_username }],
+    where: [
+      { user_phone: doc.user_phone },
+      { user_username: doc.user_username }
+    ]
   })
   if (user) {
     return common.error('auth_02')
@@ -386,8 +408,8 @@ async function registerAct(req: Request) {
       msgphone = doc.country_code + doc.user_phone
     }
 
-    let smskey = [GLBConfig.REDIS_KEYS.SMS, msgphone].join('_')
-    let rdsData = await redisClient.get(smskey)
+    const smskey = [GLBConfig.REDIS_KEYS.SMS, msgphone].join('_')
+    const rdsData = await redisClient.get(smskey)
 
     if (!rdsData) {
       return common.error('auth_04')
@@ -395,8 +417,8 @@ async function registerAct(req: Request) {
       return common.error('auth_04')
     } else {
       await redisClient.del(smskey)
-      let group = await common_usergroup.findOneBy({
-        usergroup_code: 'DEFAULT',
+      const group = await common_usergroup.findOneBy({
+        usergroup_code: 'DEFAULT'
       })
 
       if (!group) {
@@ -410,26 +432,26 @@ async function registerAct(req: Request) {
           user_country_code: doc.country_code,
           user_phone: doc.user_phone,
           user_password: doc.user_password,
-          user_name: doc.user_name || '',
+          user_name: doc.user_name || ''
         })
         .save()
 
       await common_user_groups
         .create({
           user_id: user.user_id,
-          usergroup_id: group.usergroup_id,
+          usergroup_id: group.usergroup_id
         })
         .save()
 
       // login
       user = await common_user.findOneBy({
-        user_id: user.user_id,
+        user_id: user.user_id
       })
       if (!user) {
         return common.error('auth_02')
       }
-      let session_token = authority.user2token('WEB', user.user_id)
-      let loginData = await loginInit(user, session_token, 'WEB')
+      const session_token = authority.user2token('WEB', user.user_id)
+      const loginData = await loginInit(user, session_token, 'WEB')
       if (loginData) {
         loginData.Authorization = session_token
         return common.success(loginData)
@@ -440,9 +462,13 @@ async function registerAct(req: Request) {
   }
 }
 
-async function loginInit(user: common_user, session_token: string, type: string) {
+async function loginInit(
+  user: common_user,
+  session_token: string,
+  type: string
+) {
   try {
-    let returnData = Object.create(null)
+    const returnData = Object.create(null)
     returnData.avatar = user.user_avatar
     returnData.user_id = user.user_id
     returnData.username = user.user_username
@@ -450,27 +476,27 @@ async function loginInit(user: common_user, session_token: string, type: string)
     returnData.phone = user.user_phone
     returnData.address = user.user_account
     returnData.user_email = user.user_email
-    returnData.created_at = dayjs(user.created_at).format('YYYYMMDD')
+    returnData.created_at = dayjs(user.base.created_at).format('YYYYMMDD')
     returnData.city = user.user_city
     returnData.password_state = user.user_password_error
 
-    let wechat = await common_user_wechat.findBy({
-      user_id: user.user_id,
+    const wechat = await common_user_wechat.findBy({
+      user_id: user.user_id
     })
 
     if (wechat.length > 0) {
       returnData.wechat = []
-      for (let w of wechat) {
+      for (const w of wechat) {
         returnData.wechat.push({
           appid: w.user_wechat_appid,
           openid: w.user_wechat_openid,
           nickname: w.user_wechat_nickname,
-          headimgurl: w.user_wechat_headimgurl,
+          headimgurl: w.user_wechat_headimgurl
         })
       }
     }
 
-    let organizations = await simpleSelect(
+    const organizations = await simpleSelect(
       `SELECT a.organization_user_default_flag, b.organization_id , b.organization_code , b.organization_name 
       FROM tbl_common_organization_user a , 
       tbl_common_organization b 
@@ -483,7 +509,7 @@ async function loginInit(user: common_user, session_token: string, type: string)
     returnData.default_organization_code = ''
     returnData.default_organization_name = ''
     returnData.organizations = []
-    for (let o of organizations) {
+    for (const o of organizations) {
       if (o.organization_user_default_flag === '1') {
         returnData.default_organization = o.organization_id
         returnData.default_organization_code = o.organization_code
@@ -492,16 +518,16 @@ async function loginInit(user: common_user, session_token: string, type: string)
       returnData.organizations.push({
         id: o.organization_id,
         code: o.organization_code,
-        name: o.organization_name,
+        name: o.organization_name
       })
     }
 
-    let orgs: number[] = [0]
+    const orgs: number[] = [0]
     if (returnData.default_organization) {
       orgs.push(returnData.default_organization)
     }
 
-    let groups = await simpleSelect(
+    const groups = await simpleSelect(
       `SELECT
       a.usergroup_id,
       b.usergroup_code 
@@ -522,9 +548,9 @@ async function loginInit(user: common_user, session_token: string, type: string)
     )
 
     if (groups.length > 0) {
-      let gids: number[] = []
+      const gids: number[] = []
       returnData.groups = []
-      for (let g of groups) {
+      for (const g of groups) {
         gids.push(g.usergroup_id)
         returnData.groups.push(g.usergroup_code)
       }
@@ -532,71 +558,71 @@ async function loginInit(user: common_user, session_token: string, type: string)
       returnData.menulist = await iterationMenu(user, gids)
 
       // prepare redis Cache
-      let authApis = []
+      const authApis = []
       authApis.push({
         api_name: '用户设置',
         api_function: 'USERSETTING',
-        auth_flag: '1',
+        auth_flag: '1'
       })
       if (user.user_type === GLBConfig.USER_TYPE.TYPE_ADMINISTRATOR) {
         if (user.user_username === 'admin') {
           authApis.push({
             api_name: '系统菜单维护',
-            api_function: 'SYSTEMAPICONTROL',
+            api_function: 'SYSTEMAPICONTROL'
           })
 
           authApis.push({
             api_name: '角色组维护',
-            api_function: 'GROUPCONTROL',
+            api_function: 'GROUPCONTROL'
           })
 
           authApis.push({
             api_name: '用户维护',
-            api_function: 'OPERATORCONTROL',
+            api_function: 'OPERATORCONTROL'
           })
 
           authApis.push({
             api_name: '机构模板维护',
-            api_function: 'ORGANIZATIONTEMPLATECONTROL',
+            api_function: 'ORGANIZATIONTEMPLATECONTROL'
           })
 
           authApis.push({
             api_name: '机构维护',
-            api_function: 'ORGANIZATIONCONTROL',
+            api_function: 'ORGANIZATIONCONTROL'
           })
 
           authApis.push({
             api_name: '基础功能',
-            api_function: 'BASECONTROL',
+            api_function: 'BASECONTROL'
           })
 
           authApis.push({
             api_name: '重置密码',
-            api_function: 'RESETPASSWORD',
+            api_function: 'RESETPASSWORD'
           })
         } else {
           authApis.push({
             api_name: '机构组织维护',
-            api_function: 'ORGANIZATIONGROUPCONTROL',
+            api_function: 'ORGANIZATIONGROUPCONTROL'
           })
 
           authApis.push({
             api_name: '机构用户维护',
-            api_function: 'ORGANIZATIONUSERCONTROL',
+            api_function: 'ORGANIZATIONUSERCONTROL'
           })
 
           authApis.push({
             api_name: '基础功能',
-            api_function: 'BASECONTROL',
+            api_function: 'BASECONTROL'
           })
         }
       } else {
-        let groupapis = await queryGroupApi(gids)
-        for (let item of groupapis) {
+        const groupapis = await queryGroupApi(gids)
+        for (const item of groupapis) {
           authApis.push({
             api_name: item.api_name,
             api_function: item.api_function,
-            auth_flag: item.auth_flag,
+            auth_flag: item.auth_flag
           })
         }
       }
@@ -609,19 +635,21 @@ async function loginInit(user: common_user, session_token: string, type: string)
       } else {
         expired = config.get<number>('security.TOKEN_AGE')
       }
-      let userData = _.omit(JSON.parse(JSON.stringify(user)), ['user_password'])
+      const userData = _.omit(JSON.parse(JSON.stringify(user)), [
+        'user_password'
+      ])
       userData.groups = JSON.parse(JSON.stringify(returnData.groups))
       userData.wechat = JSON.parse(JSON.stringify(wechat))
       userData.default_organization = returnData.default_organization
       userData.default_organization_code = returnData.default_organization_code
-      let loginKey = [GLBConfig.REDIS_KEYS.AUTH, type, user.user_id].join('_')
+      const loginKey = [GLBConfig.REDIS_KEYS.AUTH, type, user.user_id].join('_')
       await redisClient.del(loginKey)
       await redisClient.set(
         loginKey,
         {
           session_token: session_token,
           user: userData,
-          authApis: authApis,
+          authApis: authApis
         },
         'EX',
         expired
@@ -640,7 +668,7 @@ async function loginInit(user: common_user, session_token: string, type: string)
 const queryGroupApi = async (groups: number[]) => {
   try {
     // prepare redis Cache
-    let queryStr = `SELECT DISTINCT
+    const queryStr = `SELECT DISTINCT
         c.api_name ,
         c.api_function ,
         c.auth_flag
@@ -678,8 +706,8 @@ const queryGroupApi = async (groups: number[]) => {
         AND a.usergroup_id IN(?)
         AND b.state = '1'`
 
-    let replacements = [groups, groups]
-    let groupmenus = await simpleSelect(queryStr, replacements)
+    const replacements = [groups, groups]
+    const groupmenus = await simpleSelect(queryStr, replacements)
     return groupmenus
   } catch (error) {
     logger.error(error)
@@ -696,84 +724,90 @@ interface menuItem {
   show_flag?: string
   sub_menu?: menuItem[]
 }
-async function iterationMenu(user: common_user, groups: number[]): Promise<menuItem[]> {
+async function iterationMenu(
+  user: common_user,
+  groups: number[]
+): Promise<menuItem[]> {
   if (user.user_type === GLBConfig.USER_TYPE.TYPE_ADMINISTRATOR) {
-    let return_list = new Array()
+    const return_list = []
     return_list.push({
       menu_id: 0,
       menu_type: GLBConfig.NODE_TYPE.NODE_ROOT,
       menu_name: '权限管理',
       menu_icon: 'fa-cogs',
-      sub_menu: [],
+      sub_menu: []
     })
     if (user.user_username === 'admin') {
       return_list[0].sub_menu.push({
         menu_id: 1,
         menu_type: GLBConfig.NODE_TYPE.NODE_LEAF,
         menu_name: '系统菜单维护',
-        menu_path: '/admin/auth/SystemApiControl',
+        menu_path: '/admin/auth/SystemApiControl'
       })
 
       return_list[0].sub_menu.push({
         menu_id: 2,
         menu_type: GLBConfig.NODE_TYPE.NODE_LEAF,
         menu_name: '角色组维护',
-        menu_path: '/admin/auth/GroupControl',
+        menu_path: '/admin/auth/GroupControl'
       })
 
       return_list[0].sub_menu.push({
         menu_id: 3,
         menu_type: GLBConfig.NODE_TYPE.NODE_LEAF,
         menu_name: '用户维护',
-        menu_path: '/admin/auth/OperatorControl',
+        menu_path: '/admin/auth/OperatorControl'
       })
 
       return_list[0].sub_menu.push({
         menu_id: 4,
         menu_type: GLBConfig.NODE_TYPE.NODE_LEAF,
         menu_name: '机构模板维护',
-        menu_path: '/admin/auth/OrganizationTemplateControl',
+        menu_path: '/admin/auth/OrganizationTemplateControl'
       })
 
       return_list[0].sub_menu.push({
         menu_id: 5,
         menu_type: GLBConfig.NODE_TYPE.NODE_LEAF,
         menu_name: '机构维护',
-        menu_path: '/admin/auth/OrganizationControl',
+        menu_path: '/admin/auth/OrganizationControl'
       })
 
       return_list[0].sub_menu.push({
         menu_id: 6,
         menu_type: GLBConfig.NODE_TYPE.NODE_LEAF,
         menu_name: '重置密码',
-        menu_path: '/admin/auth/ResetPassword',
+        menu_path: '/admin/auth/ResetPassword'
       })
     } else {
       return_list[0].sub_menu.push({
         menu_id: 7,
         menu_type: GLBConfig.NODE_TYPE.NODE_LEAF,
         menu_name: '机构组织维护',
-        menu_path: '/admin/auth/OrganizationGroupControl',
+        menu_path: '/admin/auth/OrganizationGroupControl'
       })
 
       return_list[0].sub_menu.push({
         menu_id: 8,
         menu_type: GLBConfig.NODE_TYPE.NODE_LEAF,
         menu_name: '机构用户维护',
-        menu_path: '/admin/auth/OrganizationUserControl',
+        menu_path: '/admin/auth/OrganizationUserControl'
       })
     }
 
     return return_list
   } else {
-    let systemgroup = await simpleSelect('select usergroup_id from tbl_common_usergroup where organization_id = 0', [])
-    let sysgroup: number[] = []
+    const systemgroup = await simpleSelect(
+      'select usergroup_id from tbl_common_usergroup where organization_id = 0',
+      []
+    )
+    const sysgroup: number[] = []
     systemgroup.forEach((val: any) => {
       sysgroup.push(val.usergroup_id)
     })
 
-    let mugroup = _.difference(groups, sysgroup) || []
-    let sgroup = _.difference(groups, mugroup) || []
+    const mugroup = _.difference(groups, sysgroup) || []
+    const sgroup = _.difference(groups, mugroup) || []
 
     let sysMenus: menuItem[] = [],
       menus: menuItem[] = []
@@ -787,9 +821,12 @@ async function iterationMenu(user: common_user, groups: number[]): Promise<menuI
     return _.concat(sysMenus, menus)
   }
 }
-async function recursionSystemMenu(groups: number[], parent_id: string | number): Promise<menuItem[]> {
-  let return_list: menuItem[] = []
-  let queryStr = `SELECT DISTINCT
+async function recursionSystemMenu(
+  groups: number[],
+  parent_id: string | number
+): Promise<menuItem[]> {
+  const return_list: menuItem[] = []
+  const queryStr = `SELECT DISTINCT
         b.systemmenu_id menu_id ,
         b.node_type ,
         b.systemmenu_name menu_name ,
@@ -806,10 +843,10 @@ async function recursionSystemMenu(groups: number[], parent_id: string | number)
       AND a.usergroup_id IN(?)
       AND b.parent_id = ?`
 
-  let replacements = [groups, parent_id]
-  let menus = await simpleSelect(queryStr, replacements)
+  const replacements = [groups, parent_id]
+  const menus = await simpleSelect(queryStr, replacements)
 
-  for (let m of menus) {
+  for (const m of menus) {
     let sub_menu: menuItem[] = []
 
     if (m.node_type === GLBConfig.NODE_TYPE.NODE_ROOT) {
@@ -822,25 +859,31 @@ async function recursionSystemMenu(groups: number[], parent_id: string | number)
         menu_type: m.node_type,
         menu_name: m.menu_name,
         menu_path: m.api_path,
-        menu_icon: m.menu_icon,
+        menu_icon: m.menu_icon
       })
-    } else if (m.node_type === GLBConfig.NODE_TYPE.NODE_ROOT && sub_menu.length > 0) {
+    } else if (
+      m.node_type === GLBConfig.NODE_TYPE.NODE_ROOT &&
+      sub_menu.length > 0
+    ) {
       return_list.push({
         menu_id: m.menu_id,
         menu_type: m.node_type,
         menu_name: m.menu_name,
         menu_path: m.api_path,
         menu_icon: m.menu_icon,
-        sub_menu: sub_menu,
+        sub_menu: sub_menu
       })
     }
   }
   return return_list
 }
 
-async function recursionMenu(groups: number[], parent_id: string | number): Promise<menuItem[]> {
-  let return_list = []
-  let queryStr = `SELECT DISTINCT
+async function recursionMenu(
+  groups: number[],
+  parent_id: string | number
+): Promise<menuItem[]> {
+  const return_list = []
+  const queryStr = `SELECT DISTINCT
         b.organizationmenu_id menu_id ,
         b.node_type ,
         b.organizationmenu_name menu_name ,
@@ -857,10 +900,10 @@ async function recursionMenu(groups: number[], parent_id: string | number): Prom
     AND a.usergroup_id IN(?)
     AND b.parent_id = ?`
 
-  let replacements = [groups, parent_id]
-  let menus = await simpleSelect(queryStr, replacements)
+  const replacements = [groups, parent_id]
+  const menus = await simpleSelect(queryStr, replacements)
 
-  for (let m of menus) {
+  for (const m of menus) {
     let sub_menu: menuItem[] = []
 
     if (m.node_type === GLBConfig.NODE_TYPE.NODE_ROOT) {
@@ -872,15 +915,18 @@ async function recursionMenu(groups: number[], parent_id: string | number): Prom
         menu_type: m.node_type,
         menu_name: m.menu_name,
         menu_path: m.api_path,
-        menu_icon: m.menu_icon,
+        menu_icon: m.menu_icon
       })
-    } else if (m.node_type === GLBConfig.NODE_TYPE.NODE_ROOT && sub_menu.length > 0) {
+    } else if (
+      m.node_type === GLBConfig.NODE_TYPE.NODE_ROOT &&
+      sub_menu.length > 0
+    ) {
       return_list.push({
         menu_type: m.node_type,
         menu_name: m.menu_name,
         menu_path: m.api_path,
         menu_icon: m.menu_icon,
-        sub_menu: sub_menu,
+        sub_menu: sub_menu
       })
     }
   }
@@ -897,5 +943,5 @@ export default {
   userExistAct,
   registerSmsAct,
   registerAct,
-  loginInit,
+  loginInit
 }

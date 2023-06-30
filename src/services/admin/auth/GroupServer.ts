@@ -19,7 +19,7 @@ interface menuItem {
   children?: menuItem[]
 }
 async function initAct() {
-  let returnData = Object.create(null)
+  const returnData = Object.create(null)
 
   returnData.menuInfo = [
     {
@@ -38,8 +38,8 @@ async function initAct() {
 }
 
 async function genMenu(parentId: number | string): Promise<menuItem[]> {
-  let return_list: menuItem[] = []
-  let queryStr = `SELECT
+  const return_list: menuItem[] = []
+  const queryStr = `SELECT
                     a.*, b.api_type, 
                     b.api_function
                   FROM
@@ -48,9 +48,9 @@ async function genMenu(parentId: number | string): Promise<menuItem[]> {
                   WHERE a.parent_id = ?
                   ORDER BY
                     a.systemmenu_index`
-  let menus = await simpleSelect(queryStr, [parentId])
+  const menus = await simpleSelect(queryStr, [parentId])
 
-  for (let m of menus) {
+  for (const m of menus) {
     let sub_menus: menuItem[] = []
     if (m.node_type === GLBConfig.NODE_TYPE.NODE_ROOT) {
       sub_menus = await genMenu(m.systemmenu_id)
@@ -82,7 +82,7 @@ async function genMenu(parentId: number | string): Promise<menuItem[]> {
 }
 
 async function searchAct() {
-  let groups = [
+  const groups = [
     {
       usergroup_id: 0,
       name: '总机构',
@@ -97,13 +97,13 @@ async function searchAct() {
   return common.success(groups)
 }
 async function genUserGroup(parentId: string): Promise<any> {
-  let return_list = []
-  let groups = await common_usergroup.findBy({
+  const return_list = []
+  const groups = await common_usergroup.findBy({
     parent_id: parentId,
     organization_id: 0,
     usergroup_type: GLBConfig.USER_TYPE.TYPE_DEFAULT,
   })
-  for (let g of groups) {
+  for (const g of groups) {
     let sub_group = []
     if (g.node_type === GLBConfig.NODE_TYPE.NODE_ROOT) {
       sub_group = await genUserGroup(g.usergroup_id + '')
@@ -135,24 +135,24 @@ async function genUserGroup(parentId: string): Promise<any> {
 }
 
 async function getCheckAct(req: Request) {
-  let doc = common.docValidate(req)
-  let returnData = Object.create(null)
+  const doc = common.docValidate(req)
+  const returnData = Object.create(null)
   returnData.groupMenu = []
 
-  let groupmenus = await common_usergroupmenu.findBy({
+  const groupmenus = await common_usergroupmenu.findBy({
     usergroup_id: doc.usergroup_id,
   })
-  for (let item of groupmenus) {
+  for (const item of groupmenus) {
     returnData.groupMenu.push(item.menu_id)
   }
   return common.success(returnData)
 }
 
 async function addAct(req: Request) {
-  let doc = common.docValidate(req)
+  const doc = common.docValidate(req)
 
   if (doc.node_type === '01') {
-    let gcode = await common_usergroup.findOneBy({
+    const gcode = await common_usergroup.findOneBy({
       usergroup_code: doc.usergroup_code,
     })
 
@@ -161,7 +161,7 @@ async function addAct(req: Request) {
     }
   }
 
-  let usergroup = await common_usergroup
+  const usergroup = await common_usergroup
     .create({
       organization_id: 0,
       usergroup_code: doc.usergroup_code,
@@ -173,7 +173,7 @@ async function addAct(req: Request) {
     .save()
 
   if (doc.node_type === '01') {
-    for (let m of doc.menus) {
+    for (const m of doc.menus) {
       await common_usergroupmenu
         .create({
           usergroup_id: usergroup.usergroup_id,
@@ -187,8 +187,8 @@ async function addAct(req: Request) {
 }
 
 async function modifyAct(req: Request) {
-  let doc = common.docValidate(req)
-  let usergroup = await common_usergroup.findOneBy({
+  const doc = common.docValidate(req)
+  const usergroup = await common_usergroup.findOneBy({
     usergroup_id: doc.usergroup_id,
   })
   if (usergroup) {
@@ -200,7 +200,7 @@ async function modifyAct(req: Request) {
         usergroup_id: doc.usergroup_id,
       })
 
-      for (let m of doc.menus) {
+      for (const m of doc.menus) {
         await common_usergroupmenu
           .create({
             usergroup_id: usergroup.usergroup_id,
@@ -217,8 +217,8 @@ async function modifyAct(req: Request) {
 }
 
 async function removeAct(req: Request) {
-  let doc = common.docValidate(req)
-  let usergroup = await common_usergroup.findOneBy({
+  const doc = common.docValidate(req)
+  const usergroup = await common_usergroup.findOneBy({
     usergroup_id: doc.usergroup_id,
   })
 
@@ -235,7 +235,7 @@ async function removeAct(req: Request) {
       await usergroup.remove()
       return common.success()
     } else {
-      let chcount = await common_usergroup.countBy({
+      const chcount = await common_usergroup.countBy({
         parent_id: usergroup.usergroup_id + '',
       })
 

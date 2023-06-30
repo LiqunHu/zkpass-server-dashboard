@@ -14,21 +14,21 @@ import { createLogger } from '@app/logger'
 const logger = createLogger(__filename)
 
 async function initAct() {
-  let returnData = Object.create(null)
+  const returnData = Object.create(null)
 
-  let groups: {
+  const groups: {
     id: number
     text: string
     disabled: boolean
   }[] = []
 
   async function genUserGroup(parentId: string, lev: number) {
-    let actgroups = await common_usergroup.findBy({
+    const actgroups = await common_usergroup.findBy({
       parent_id: parentId,
       usergroup_type: GLBConfig.USER_TYPE.TYPE_DEFAULT,
       organization_id: 0,
     })
-    for (let g of actgroups) {
+    for (const g of actgroups) {
       if (g.node_type === GLBConfig.NODE_TYPE.NODE_ROOT) {
         groups.push({
           id: g.usergroup_id,
@@ -53,19 +53,19 @@ async function initAct() {
 }
 
 async function searchAct(req: Request) {
-  let doc = common.docValidate(req),
+  const doc = common.docValidate(req),
     returnData = Object.create(null)
 
   let queryStr =
     'select * from tbl_common_user where state = "1" and user_type = "' +
     GLBConfig.USER_TYPE.TYPE_DEFAULT +
     '"'
-  let replacements = []
+  const replacements = []
 
   if (doc.search_text) {
     queryStr +=
       ' and (user_username like ? or user_email like ? or user_phone like ? or user_name like ? or user_address like ?)'
-    let search_text = '%' + doc.search_text + '%'
+    const search_text = '%' + doc.search_text + '%'
     replacements.push(search_text)
     replacements.push(search_text)
     replacements.push(search_text)
@@ -73,17 +73,17 @@ async function searchAct(req: Request) {
     replacements.push(search_text)
   }
 
-  let result = await queryWithCount(doc, queryStr, replacements)
+  const result = await queryWithCount(doc, queryStr, replacements)
 
   returnData.total = result.count
   returnData.rows = []
 
-  for (let ap of result.data) {
+  for (const ap of result.data) {
     ap.user_groups = []
-    let user_groups = await common_user_groups.findBy({
+    const user_groups = await common_user_groups.findBy({
       user_id: ap.user_id,
     })
-    for (let g of user_groups) {
+    for (const g of user_groups) {
       ap.user_groups.push(g.usergroup_id)
     }
     delete ap.user_password
@@ -94,11 +94,11 @@ async function searchAct(req: Request) {
 }
 
 async function addAct(req: Request) {
-  let doc = common.docValidate(req)
+  const doc = common.docValidate(req)
   let groupCheckFlag = true
 
-  for (let gid of doc.user_groups) {
-    let usergroup = await common_usergroup.findOneBy({
+  for (const gid of doc.user_groups) {
+    const usergroup = await common_usergroup.findOneBy({
       usergroup_id: gid,
     })
     if (!usergroup) {
@@ -129,14 +129,14 @@ async function addAct(req: Request) {
       user_zipcode: doc.user_zipcode,
     }).save()
 
-    for (let gid of doc.user_groups) {
+    for (const gid of doc.user_groups) {
       await common_user_groups.create({
         user_id: adduser.user_id,
         usergroup_id: gid,
       }).save()
     }
 
-    let returnData = JSON.parse(JSON.stringify(adduser))
+    const returnData = JSON.parse(JSON.stringify(adduser))
     delete returnData.user_password
     returnData.user_groups = doc.user_groups
 
@@ -147,15 +147,17 @@ async function addAct(req: Request) {
 }
 
 async function modifyAct(req: Request) {
-  let doc = common.docValidate(req)
+  const doc = common.docValidate(req)
 
-  let modiuser = await common_user.findOneBy({
+  const modiuser = await common_user.findOneBy({
     user_id: doc.old.user_id,
-    state: GLBConfig.ENABLE,
+    base: {
+      state: GLBConfig.ENABLE,
+    }
   })
   if (modiuser) {
     if (doc.new.user_email) {
-      let emailuser = await common_user.findOneBy({
+      const emailuser = await common_user.findOneBy({
         user_id: Not(modiuser.user_id),
         user_email: doc.new.user_email,
       })
@@ -165,7 +167,7 @@ async function modifyAct(req: Request) {
     }
 
     if (doc.new.user_phone) {
-      let phoneuser = await common_user.findOneBy({
+      const phoneuser = await common_user.findOneBy({
           user_id: Not(modiuser.user_id),
           user_phone: doc.new.user_phone,
       })
@@ -183,7 +185,7 @@ async function modifyAct(req: Request) {
     modiuser.user_zipcode = doc.new.user_zipcode
     await modiuser.save()
 
-    let queryStr = `SELECT
+    const queryStr = `SELECT
         a.user_groups_id,
         a.usergroup_id 
       FROM
@@ -193,9 +195,9 @@ async function modifyAct(req: Request) {
         a.usergroup_id = b.usergroup_id 
         AND b.organization_id = 0 
         AND a.user_id = ?`
-    let groups = await simpleSelect(queryStr, [modiuser.user_id])
-    let existids = []
-    for (let g of groups) {
+    const groups = await simpleSelect(queryStr, [modiuser.user_id])
+    const existids = []
+    for (const g of groups) {
       if (doc.new.user_groups.indexOf(g.usergroup_id) < 0) {
         await common_user_groups.delete({
           user_groups_id: g.user_groups_id,
@@ -205,7 +207,7 @@ async function modifyAct(req: Request) {
       }
     }
 
-    for (let gid of doc.new.user_groups) {
+    for (const gid of doc.new.user_groups) {
       if (existids.indexOf(gid) < 0) {
         await common_user_groups.create({
           user_id: modiuser.user_id,
@@ -214,7 +216,7 @@ async function modifyAct(req: Request) {
       }
     }
 
-    let returnData = JSON.parse(JSON.stringify(modiuser))
+    const returnData = JSON.parse(JSON.stringify(modiuser))
     delete returnData.user_password
     returnData.user_groups = doc.new.user_groups
     logger.debug('modify success')
@@ -225,15 +227,17 @@ async function modifyAct(req: Request) {
 }
 
 async function deleteAct(req: Request) {
-  let doc = common.docValidate(req)
+  const doc = common.docValidate(req)
 
-  let deluser = await common_user.findOneBy({
+  const deluser = await common_user.findOneBy({
     user_id: doc.user_id,
-    state: GLBConfig.ENABLE,
+    base: {
+      state: GLBConfig.ENABLE,
+    }
   })
 
   if (deluser) {
-    deluser.state = GLBConfig.DISABLE
+    deluser.base.state = GLBConfig.DISABLE
     await deluser.save()
     redisClient.del(
       [GLBConfig.REDIS_KEYS.AUTH, 'WEB', deluser.user_id].join('_')

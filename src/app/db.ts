@@ -115,21 +115,21 @@ interface pageInfo {
 }
 export async function queryWithCount(pageDoc: pageInfo, queryStr: string, replacements?: any[]) {
   let queryStrCnt = ''
-  let lowerStr = queryStr.replace(/\n/g, ' ').toLowerCase()
+  const lowerStr = queryStr.replace(/\n/g, ' ').toLowerCase()
   if (lowerStr.indexOf('group by') >= 0) {
     queryStrCnt = 'select count(1) num from ( ' + lowerStr + ' ) temp'
   } else {
-    let cnt = lowerStr.indexOf('from') + 5
+    const cnt = lowerStr.indexOf('from') + 5
     queryStrCnt = 'select count(1) num from ' + lowerStr.substring(cnt)
   }
   const entityManager = dataSource.manager
-  let count = await entityManager.query(queryStrCnt, replacements)
+  const count = await entityManager.query(queryStrCnt, replacements)
 
-  let rep = replacements || []
+  const rep = replacements || []
   rep.push((pageDoc.offset || 0) * (pageDoc.limit || 100))
   rep.push(pageDoc.limit || 100)
 
-  let queryRst = await entityManager.query(queryStr + ' LIMIT ?,?', rep)
+  const queryRst = await entityManager.query(queryStr + ' LIMIT ?,?', rep)
 
   return {
     count: count[0].num,

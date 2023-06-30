@@ -24,7 +24,7 @@ async function searchAct(req: Request) {
   )
   logger.debug(result)
 
-  let ruser = await redisClient.get(
+  const ruser = await redisClient.get(
     'AUTH_ADMIN_2e7d5af0606611eb97682d45afbc0ab3'
   )
   logger.debug(ruser)

@@ -8,7 +8,7 @@ import { createLogger } from '@app/logger'
 const logger = createLogger(__filename)
 
 async function searchUserAct(req: Request) {
-  let doc = await common.docValidate(req),
+  const doc = await common.docValidate(req),
   returnData = Object.create(null)
 
   if (Number(doc.search_text) + '' === doc.search_text) {
@@ -35,11 +35,11 @@ async function searchUserAct(req: Request) {
     WHERE
       a.state = "1" 
       AND user_type = "00"`
-  let replacements = []
+  const replacements = []
 
   if (doc.search_text) {
     queryStr += ' AND( user_email LIKE ? OR user_phone LIKE ? OR user_name LIKE ?)'
-    let search_text = doc.search_text + '%'
+    const search_text = doc.search_text + '%'
     replacements.push(search_text)
     replacements.push(search_text)
     replacements.push(search_text)
@@ -47,12 +47,12 @@ async function searchUserAct(req: Request) {
 
   queryStr += ' LIMIT 10'
 
-  let result = await simpleSelect(queryStr, replacements)
+  const result = await simpleSelect(queryStr, replacements)
 
-  let uni = _.sortedUniqBy<any>(result, 'user_id')
+  const uni = _.sortedUniqBy<any>(result, 'user_id')
   returnData.rows = []
 
-  for (let r of uni) {
+  for (const r of uni) {
     returnData.rows.push({
       user_id: r.user_id,
       user_email: r.user_email,
