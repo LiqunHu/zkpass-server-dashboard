@@ -1,0 +1,46 @@
+{
+  "mysql": {
+    "host": "127.0.0.1",
+    "port": 3306,
+    "username": "root",
+    "password": "123456",
+    "database": "zkpass",
+    "logging": true
+  },
+  "redis": {
+    "host": "127.0.0.1",
+    "port": 16379
+  },
+  "loggerConfig": {
+    "appenders": {
+      "out": {
+        "type": "stdout"
+      },
+      "everything": {
+        "type": "dateFile",
+        "filename": "../log/app.log",
+        "pattern": "-yyyy-MM-dd",
+        "compress": true
+      }
+    },
+    "categories": {
+      "default": {
+        "appenders": ["out", "everything"],
+        "level": "debug"
+      }
+    }
+  },
+  "security": {
+    "SECRET_KEY": "zc7#_66#g%u2n$j_)j$-r(swt74d(2l%wc2y=wqt_m8kpy%04*",
+    "TOKEN_AGE": 43200,
+    "MOBILE_TOKEN_AGE": 31536000,
+    "SYSTEM_TOKEN_AGE": 43200,
+    "SMS_TOKEN_AGE": 300,
+    "CAPTCHA_TOKEN_AGE": 60
+  },
+  "scheduleJobs": [{ "name": "refreshRedis", "rule": "0 0 * * * *" }],
+  "alisms": {
+    "accessKeyId": "111",
+    "accessKeySecret": "111"
+  }
+}
