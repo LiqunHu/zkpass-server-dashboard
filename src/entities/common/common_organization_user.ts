@@ -1,8 +1,8 @@
 import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm'
-import { common_entity } from '@/entities/common_entity'
+import { base_entity } from '@/entities/base_entity'
 
 @Entity({ name: 'tbl_common_organization_user' })
-export class common_organization_user extends common_entity {
+export class common_organization_user {
   @PrimaryGeneratedColumn({ comment: '主键' })
   organization_user_id: number
 
@@ -18,4 +18,7 @@ export class common_organization_user extends common_entity {
     comment: '默认机构标示 1--默认机构 只有一个',
   })
   organization_user_default_flag: string
+
+  @Column(() => base_entity , { prefix: '' })
+  base: base_entity
 }

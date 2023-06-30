@@ -1,8 +1,8 @@
 import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm'
-import { common_entity } from '@/entities/common_entity'
+import { base_entity } from '@/entities/base_entity'
 
 @Entity({ name: 'tbl_sbt_task' })
-export class sbt_task extends common_entity {
+export class sbt_task {
   @PrimaryGeneratedColumn({ comment: '主键' })
   sbt_task_id: number
 
@@ -20,4 +20,7 @@ export class sbt_task extends common_entity {
 
   @Column({ default: '', length: 500, comment: '奖励' })
   reward: string
+
+  @Column(() => base_entity , { prefix: '' })
+  base: base_entity
 }

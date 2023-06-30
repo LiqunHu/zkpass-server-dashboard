@@ -2,11 +2,10 @@ import {
   Column,
   CreateDateColumn,
   UpdateDateColumn,
-  BeforeUpdate,
-  BaseEntity,
+  BeforeUpdate
 } from 'typeorm'
 
-export class common_entity extends BaseEntity {
+export class base_entity {
   @Column({ length: 5, default: '1', comment: '软删除表示 1--生效 0--失效' })
   state: string
 
