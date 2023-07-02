@@ -13,13 +13,16 @@ export class sbt_task extends BaseEntity {
   sbt_task_type: string
 
   @Column({ default: '', length: 500, comment: '网址' })
-  url: string
+  sbt_task_url: string
 
   @Column({ default: '', length: 1000, comment: '需求' })
-  requirements: string
+  sbt_task_requirements: string
 
   @Column({ default: '', length: 500, comment: '奖励' })
-  reward: string
+  sbt_task_reward: string
+
+  @Column({ default: '0', length: 10, comment: '状态 0--下架 1--上架' })
+  sbt_task_status: string
 
   @Column(() => base_entity, { prefix: '' })
   base: base_entity

@@ -7,7 +7,7 @@ export default {
       name: '获取组相关信息',
       enname: 'OperatorControlinit',
       tags: ['OperatorControl'],
-      path: '/api/node/admin/auth/OperatorControl/init',
+      path: '/api/admin/auth/OperatorControl/init',
       type: 'post',
       JoiSchema: {},
     },
@@ -15,7 +15,7 @@ export default {
       name: '用户查询',
       enname: 'OperatorControlsearch',
       tags: ['OperatorControl'],
-      path: '/api/node/admin/auth/OperatorControl/search',
+      path: '/api/admin/auth/OperatorControl/search',
       type: 'post',
       JoiSchema: {
         body: {
@@ -29,7 +29,7 @@ export default {
       name: '增加操作员',
       enname: 'OperatorControladd',
       tags: ['OperatorControl'],
-      path: '/api/node/admin/auth/OperatorControl/add',
+      path: '/api/admin/auth/OperatorControl/add',
       type: 'post',
       JoiSchema: {
         body: {
@@ -48,7 +48,7 @@ export default {
       name: '修改用户',
       enname: 'OperatorControlmodify',
       tags: ['OperatorControl'],
-      path: '/api/node/admin/auth/OperatorControl/modify',
+      path: '/api/admin/auth/OperatorControl/modify',
       type: 'post',
       JoiSchema: {
         body: Joi.object().keys({
@@ -95,7 +95,7 @@ export default {
       name: '删除用户',
       enname: 'OperatorControldelete',
       tags: ['OperatorControl'],
-      path: '/api/node/admin/auth/OperatorControl/delete',
+      path: '/api/admin/auth/OperatorControl/delete',
       type: 'post',
       JoiSchema: {
         body: Joi.object().keys({

@@ -7,7 +7,7 @@ export default {
       name: '获取数据字典',
       enname: 'SystemApiControlinit',
       tags: ['SystemApiControl'],
-      path: '/api/node/admin/auth/SystemApiControl/init',
+      path: '/api/admin/auth/SystemApiControl/init',
       type: 'post',
       JoiSchema: {},
     },
@@ -15,7 +15,7 @@ export default {
       name: 'API树查询',
       enname: 'SystemApiControlsearch',
       tags: ['SystemApiControl'],
-      path: '/api/node/admin/auth/SystemApiControl/search',
+      path: '/api/admin/auth/SystemApiControl/search',
       type: 'post',
       JoiSchema: {},
     },
@@ -23,7 +23,7 @@ export default {
       name: '增加目录',
       enname: 'SystemApiControladdFolder',
       tags: ['SystemApiControl'],
-      path: '/api/node/admin/auth/SystemApiControl/addFolder',
+      path: '/api/admin/auth/SystemApiControl/addFolder',
       type: 'post',
       JoiSchema: {
         body: {
@@ -37,7 +37,7 @@ export default {
       name: '修改目录',
       enname: 'SystemApiControlmodifyFolder',
       tags: ['SystemApiControl'],
-      path: '/api/node/admin/auth/SystemApiControl/modifyFolder',
+      path: '/api/admin/auth/SystemApiControl/modifyFolder',
       type: 'post',
       JoiSchema: {
         body: {
@@ -51,7 +51,7 @@ export default {
       name: '增加API',
       enname: 'SystemApiControladdMenu',
       tags: ['SystemApiControl'],
-      path: '/api/node/admin/auth/SystemApiControl/addMenu',
+      path: '/api/admin/auth/SystemApiControl/addMenu',
       type: 'post',
       JoiSchema: {
         body: {
@@ -69,7 +69,7 @@ export default {
       name: '修改API',
       enname: 'SystemApiControlmodifyMenu',
       tags: ['SystemApiControl'],
-      path: '/api/node/admin/auth/SystemApiControl/modifyMenu',
+      path: '/api/admin/auth/SystemApiControl/modifyMenu',
       type: 'post',
       JoiSchema: {
         body: {
@@ -87,7 +87,7 @@ export default {
       name: '删除节点',
       enname: 'SystemApiControlremove',
       tags: ['SystemApiControl'],
-      path: '/api/node/admin/auth/SystemApiControl/remove',
+      path: '/api/admin/auth/SystemApiControl/remove',
       type: 'post',
       JoiSchema: {
         body: {

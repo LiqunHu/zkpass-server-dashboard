@@ -3,7 +3,7 @@ import { SnakeNamingStrategy } from 'typeorm-naming-strategies'
 import config from 'config'
 import { dataSource } from '@/app/db'
 
-const table = 'src/entities/common/common_usergroupmenu.ts'
+const table = 'src/entities/sbt/sbt_task.ts'
 // let connection: Connection | null = null
 export async function createDB() {
   if (table) {

@@ -7,7 +7,7 @@ export default {
       name: '获取组相关信息',
       enname: 'OrganizationUserControlinit',
       tags: ['OrganizationUserControl'],
-      path: '/api/node/admin/auth/OrganizationUserControl/init',
+      path: '/api/admin/auth/OrganizationUserControl/init',
       type: 'post',
       JoiSchema: {},
     },
@@ -15,7 +15,7 @@ export default {
       name: '用户查询',
       enname: 'OrganizationUserControlsearch',
       tags: ['OrganizationUserControl'],
-      path: '/api/node/admin/auth/OrganizationUserControl/search',
+      path: '/api/admin/auth/OrganizationUserControl/search',
       type: 'post',
       JoiSchema: {
         body: {
@@ -30,7 +30,7 @@ export default {
       name: '增加操作员',
       enname: 'OrganizationUserControladd',
       tags: ['OrganizationUserControl'],
-      path: '/api/node/admin/auth/OrganizationUserControl/add',
+      path: '/api/admin/auth/OrganizationUserControl/add',
       type: 'post',
       JoiSchema: {
         body: {
@@ -42,7 +42,7 @@ export default {
       name: '修改用户',
       enname: 'OrganizationUserControlmodify',
       tags: ['OrganizationUserControl'],
-      path: '/api/node/admin/auth/OrganizationUserControl/modify',
+      path: '/api/admin/auth/OrganizationUserControl/modify',
       type: 'post',
       JoiSchema: {
         body: {
@@ -58,7 +58,7 @@ export default {
       name: '删除用户',
       enname: 'OperatorControldelete',
       tags: ['OrganizationUserControl'],
-      path: '/api/node/admin/auth/OrganizationUserControl/delete',
+      path: '/api/admin/auth/OrganizationUserControl/delete',
       type: 'post',
       JoiSchema: {
         body: {

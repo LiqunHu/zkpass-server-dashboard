@@ -7,7 +7,7 @@ export default {
       name: '查询客户信息',
       enname: 'ResetPasswordSearch',
       tags: ['ResetPassword'],
-      path: '/api/node/admin/auth/ResetPassword/search',
+      path: '/api/admin/auth/ResetPassword/search',
       type: 'post',
       JoiSchema: {
         body: {
@@ -19,7 +19,7 @@ export default {
       name: '重置密码',
       enname: 'ResetPasswordReset',
       tags: ['ResetPassword'],
-      path: '/api/node/admin/auth/ResetPassword/reset',
+      path: '/api/admin/auth/ResetPassword/reset',
       type: 'post',
       JoiSchema: {
         body: {

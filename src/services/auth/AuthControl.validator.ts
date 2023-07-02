@@ -29,7 +29,7 @@ export default {
       name: '获取登陆短信验证码',
       enname: 'AuthLoginSms',
       tags: ['Auth'],
-      path: '/api/node/auth/loginSms',
+      path: '/api/auth/loginSms',
       type: 'post',
       JoiSchema: {
         body: {
@@ -43,7 +43,7 @@ export default {
       name: '验证码登陆授权',
       enname: 'AuthsigninBySms',
       tags: ['Auth'],
-      path: '/api/node/auth/signinBySms',
+      path: '/api/auth/signinBySms',
       type: 'post',
       JoiSchema: {
         body: {
@@ -57,7 +57,7 @@ export default {
       name: '钱包账户登陆授权',
       enname: 'AuthsigninByAccount',
       tags: ['Auth'],
-      path: '/api/node/auth/signinByAccount',
+      path: '/api/auth/signinByAccount',
       type: 'post',
       JoiSchema: {
         body: {
@@ -71,7 +71,7 @@ export default {
       name: '登出',
       enname: 'Authsignout',
       tags: ['Auth'],
-      path: '/api/node/auth/signout',
+      path: '/api/auth/signout',
       type: 'post',
       JoiSchema: {},
     },
@@ -79,7 +79,7 @@ export default {
       name: '用户存在',
       enname: 'AuthuserExist',
       tags: ['Auth'],
-      path: '/api/node/auth/userExist',
+      path: '/api/auth/userExist',
       type: 'post',
       JoiSchema: {
         body: {
@@ -91,7 +91,7 @@ export default {
       name: '获取注册短信验证码',
       enname: 'AuthRegisterSms',
       tags: ['Auth'],
-      path: '/api/node/auth/registerSms',
+      path: '/api/auth/registerSms',
       type: 'post',
       JoiSchema: {
         body: {
@@ -106,7 +106,7 @@ export default {
       name: '注册',
       enname: 'Authregister',
       tags: ['Auth'],
-      path: '/api/node/auth/register',
+      path: '/api/auth/register',
       type: 'post',
       JoiSchema: {
         body: {

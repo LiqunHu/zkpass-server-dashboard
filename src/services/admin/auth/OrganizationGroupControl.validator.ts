@@ -7,7 +7,7 @@ export default {
       name: '获取组数据字典',
       enname: 'OrganizationGroupControlinit',
       tags: ['OrganizationGroupControl'],
-      path: '/api/node/admin/auth/OrganizationGroupControl/init',
+      path: '/api/admin/auth/OrganizationGroupControl/init',
       type: 'post',
       JoiSchema: {},
     },
@@ -15,7 +15,7 @@ export default {
       name: '组查询',
       enname: 'OrganizationGroupControlsearch',
       tags: ['OrganizationGroupControl'],
-      path: '/api/node/admin/auth/OrganizationGroupControl/search',
+      path: '/api/admin/auth/OrganizationGroupControl/search',
       type: 'post',
       JoiSchema: {},
     },
@@ -23,7 +23,7 @@ export default {
       name: '获取组下拥有的菜单',
       enname: 'OrganizationGroupControlgetcheck',
       tags: ['OrganizationGroupControl'],
-      path: '/api/node/admin/auth/OrganizationGroupControl/getcheck',
+      path: '/api/admin/auth/OrganizationGroupControl/getcheck',
       type: 'post',
       JoiSchema: {
         body: {
@@ -35,7 +35,7 @@ export default {
       name: '增加目录或者节点',
       enname: 'OrganizationGroupControladd',
       tags: ['OrganizationGroupControl'],
-      path: '/api/node/admin/auth/OrganizationGroupControl/add',
+      path: '/api/admin/auth/OrganizationGroupControl/add',
       type: 'post',
       JoiSchema: {
         body: {
@@ -55,7 +55,7 @@ export default {
       name: '修改节点',
       enname: 'OrganizationGroupControlmodify',
       tags: ['OrganizationGroupControl'],
-      path: '/api/node/admin/auth/OrganizationGroupControl/modify',
+      path: '/api/admin/auth/OrganizationGroupControl/modify',
       type: 'post',
       JoiSchema: {
         body: {
@@ -74,7 +74,7 @@ export default {
       name: '删除组',
       enname: 'OrganizationGroupControlremove',
       tags: ['OrganizationGroupControl'],
-      path: '/api/node/admin/auth/OrganizationGroupControl/remove',
+      path: '/api/admin/auth/OrganizationGroupControl/remove',
       type: 'post',
       JoiSchema: {
         body: {

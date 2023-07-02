@@ -7,7 +7,7 @@ export default {
       name: '获取组相关信息',
       enname: 'OrganizationControlinit',
       tags: ['OrganizationControl'],
-      path: '/api/node/admin/auth/OrganizationControl/init',
+      path: '/api/admin/auth/OrganizationControl/init',
       type: 'post',
       JoiSchema: {},
     },
@@ -15,7 +15,7 @@ export default {
       name: '机构查询',
       enname: 'OrganizationControlsearch',
       tags: ['OrganizationControl'],
-      path: '/api/node/admin/auth/OrganizationControl/search',
+      path: '/api/admin/auth/OrganizationControl/search',
       type: 'post',
       JoiSchema: {
         body: {
@@ -29,7 +29,7 @@ export default {
       name: '增加机构',
       enname: 'OrganizationControladd',
       tags: ['OrganizationControl'],
-      path: '/api/node/admin/auth/OrganizationControl/add',
+      path: '/api/admin/auth/OrganizationControl/add',
       type: 'post',
       JoiSchema: {
         body: {
@@ -43,7 +43,7 @@ export default {
       name: '查询机构菜单',
       enname: 'OrganizationControlgetOrganizationMenu',
       tags: ['OrganizationControl'],
-      path: '/api/node/admin/auth/OrganizationControl/getOrganizationMenu',
+      path: '/api/admin/auth/OrganizationControl/getOrganizationMenu',
       type: 'post',
       JoiSchema: {
         body: {
@@ -55,7 +55,7 @@ export default {
       name: '增加目录',
       enname: 'OrganizationControladdFolder',
       tags: ['OrganizationControl'],
-      path: '/api/node/admin/auth/OrganizationControl/addFolder',
+      path: '/api/admin/auth/OrganizationControl/addFolder',
       type: 'post',
       JoiSchema: {
         body: {
@@ -70,7 +70,7 @@ export default {
       name: '增加菜单',
       enname: 'OrganizationControladdMenus',
       tags: ['OrganizationControl'],
-      path: '/api/node/admin/auth/OrganizationControl/addMenus',
+      path: '/api/admin/auth/OrganizationControl/addMenus',
       type: 'post',
       JoiSchema: {
         body: {
@@ -89,7 +89,7 @@ export default {
       name: '删除对象',
       enname: 'OrganizationControlremoveItem',
       tags: ['OrganizationControl'],
-      path: '/api/node/admin/auth/OrganizationControl/removeItem',
+      path: '/api/admin/auth/OrganizationControl/removeItem',
       type: 'post',
       JoiSchema: {
         body: {

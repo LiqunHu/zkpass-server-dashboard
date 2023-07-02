@@ -7,7 +7,7 @@ export default {
       name: '生成授权token',
       enname: 'SystemAuthControlgenSystemToken',
       tags: ['SystemAuthControl'],
-      path: '/api/node/admin/auth/SystemAuthControl/genSystemToken',
+      path: '/api/admin/auth/SystemAuthControl/genSystemToken',
       type: 'post',
       JoiSchema: {
         body: {
