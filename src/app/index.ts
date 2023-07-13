@@ -16,12 +16,12 @@ app.use('/files', express.static(path.join(__dirname, '../../public/files')))
 app.use(
   log4js.connectLogger(log4js.getLogger('http'), {
     level: 'auto',
-    nolog: '\\.gif|\\.jpg$'
+    nolog: '\\.gif|\\.jpg$',
   })
 )
-app.use(express.json())
-app.use(express.urlencoded({ extended: true }))
-app.use(express.raw({ limit: '10mb' }))
+app.use(express.json({limit: '50mb'}))
+app.use(express.urlencoded({ limit: '50mb', extended: true }))
+app.use(express.raw({limit: '50mb'}))
 app.use(cookieParser())
 
 const secureConfig = config.get<SecureConfig>('security')
