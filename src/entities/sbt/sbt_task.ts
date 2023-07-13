@@ -10,10 +10,10 @@ export class sbt_task extends BaseEntity {
   sbt_task_country_code: string
 
   @Column({ default: '', length: 20, comment: '任务类型' })
-  sbt_task_type: string
+  sbt_task_category: string
 
   @Column({ default: '', length: 500, comment: '网址' })
-  sbt_task_url: string
+  sbt_task_domain: string
 
   @Column({ default: '', length: 1000, comment: '需求' })
   sbt_task_requirements: string

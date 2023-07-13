@@ -1,7 +1,7 @@
 {
   "mysql": {
     "host": "127.0.0.1",
-    "port": 3306,
+    "port": 13306,
     "username": "root",
     "password": "123456",
     "database": "zkpass",
@@ -37,6 +37,10 @@
     "SYSTEM_TOKEN_AGE": 43200,
     "SMS_TOKEN_AGE": 300,
     "CAPTCHA_TOKEN_AGE": 60
+  },
+  "files": {
+    "tempDir": "./public/temp/",
+    "tempUrl": "/temp/"
   },
   "scheduleJobs": [{ "name": "refreshRedis", "rule": "0 0 * * * *" }],
   "alisms": {

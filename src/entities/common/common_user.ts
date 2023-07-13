@@ -33,6 +33,9 @@ export class common_user extends BaseEntity {
   @Column({ length: 20, comment: '手机' })
   user_phone: string
 
+  @Column({ length: 50, comment: 'discord' })
+  user_discord: string
+
   @Column({ length: 100, comment: '区块链地址' })
   user_account: string
 

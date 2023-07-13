@@ -30,7 +30,7 @@
     "log4js": "6.9.1",
     "log4js-logstash-tcp": "2.0.5",
     "mysql2": "3.4.3",
-    "node-srv-utils": "1.0.4",
+    "node-srv-utils": "https://github.com/LiqunHu/node-srv-utils.git",
     "phone": "^3.1.13",
     "svg-captcha": "^1.4.0",
     "typeorm": "0.3.17",

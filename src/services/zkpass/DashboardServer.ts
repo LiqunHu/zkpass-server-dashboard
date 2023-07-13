@@ -19,9 +19,9 @@ async function getTaskListAct(req: Request) {
     replacements.push(doc.sbt_task_country_code)
   }
 
-  if (doc.sbt_task_type) {
-    queryStr += ' AND sbt_task_type = ? '
-    replacements.push(doc.sbt_task_type)
+  if (doc.sbt_task_category) {
+    queryStr += ' AND sbt_task_category = ? '
+    replacements.push(doc.sbt_task_category)
   }
 
   if (doc.search_text) {

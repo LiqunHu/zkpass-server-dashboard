@@ -1,8 +1,11 @@
 import fs from 'fs'
+import path from 'path'
 import Joi from 'joi'
 import _ from 'lodash'
 import { Request } from 'express'
 import { createLogger } from '@app/logger'
+import config from 'config'
+import { fileUtil } from 'node-srv-utils'
 import Error from './Error'
 
 const logger = createLogger(__filename)
@@ -138,6 +141,15 @@ function generateNonceString(length: number) {
   return noceStr
 }
 
+async function fileSaveTemp(req: Request) {
+  let tempDir = path.join(process.cwd(), config.get<string>('files.tempDir'))
+  let fileInfo = await fileUtil.fileSaveLocal(
+    req,
+    tempDir,
+    config.get<string>('files.tempUrl')
+  )
+  return fileInfo
+}
 // const getUploadTempPath = uploadurl => {
 //   let fileName = path.basename(uploadurl)
 //   return path.join(__dirname, '../' + config.uploadOptions.uploadDir + '/' + fileName)
@@ -186,5 +198,6 @@ export default {
   sendData,
   sendFault,
   generateRandomAlphaNum,
-  generateNonceString
+  generateNonceString,
+  fileSaveTemp
 }
