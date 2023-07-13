@@ -72,7 +72,7 @@ async function getSubmitAPIListAct(req: Request) {
 }
 
 async function uploadAct(req: Request) {
-  let rsp = await common.fileSaveTemp(req)
+  const rsp = await common.fileSaveTemp(req)
 
   return common.success(rsp)
 }

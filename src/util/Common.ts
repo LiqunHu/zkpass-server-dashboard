@@ -142,8 +142,8 @@ function generateNonceString(length: number) {
 }
 
 async function fileSaveTemp(req: Request) {
-  let tempDir = path.join(process.cwd(), config.get<string>('files.tempDir'))
-  let fileInfo = await fileUtil.fileSaveLocal(
+  const tempDir = path.join(process.cwd(), config.get<string>('files.tempDir'))
+  const fileInfo = await fileUtil.fileSaveLocal(
     req,
     tempDir,
     config.get<string>('files.tempUrl')
