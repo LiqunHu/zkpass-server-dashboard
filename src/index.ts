@@ -16,7 +16,7 @@ import schedule from '@schedule/index'
 import app from './app'
 import { initDB } from './app/db'
 
-const port = process.env.PORT || 17000
+const port = process.env.PORT || 9090
 
 app.set('port', port)
 
