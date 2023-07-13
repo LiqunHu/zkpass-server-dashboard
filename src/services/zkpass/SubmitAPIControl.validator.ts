@@ -7,17 +7,20 @@ export default {
       name: '查询提交的api',
       enname: 'SubmitAPIControl',
       tags: ['BaseControl'],
-      path: '/api/zkpass/SubmitAPIControl/getSubmitAPIList',
+      path: '/api/zkpass/submitapi/getSubmitAPIList',
       type: 'post',
       JoiSchema: {
-        body: {}
+        body: {
+          limit: Joi.number().integer(),
+          offset: Joi.number().integer()
+        }
       }
     },
     upload: {
       name: '上传文件',
       enname: 'BaseControlupload',
       tags: ['BaseControl'],
-      path: '/api/zkpass/SubmitAPIControl//upload',
+      path: '/api/zkpass/submitapi//upload',
       type: 'post',
       JoiSchema: {}
     },
