@@ -51,13 +51,15 @@ async function signinAct(req: Request) {
       user.user_password
     )
 
+    logger.info(decrypted)
     if (
       decrypted != '' &&
       (decrypted === user.user_username || decrypted === user.user_phone)
     ) {
       const session_token = authority.user2token(doc.login_type, user.user_id)
+      logger.info(session_token)
       const loginData = await loginInit(user, session_token, doc.login_type)
-
+      logger.info(loginData)
       if (loginData) {
         loginData.Authorization = session_token
         user.user_password_error = 0

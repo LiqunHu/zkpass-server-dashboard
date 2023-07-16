@@ -1,11 +1,11 @@
 import { Request } from 'express'
-import _ from 'lodash'
 import { simpleSelect, queryWithCount } from '@app/db'
 import common from '@util/Common'
+import { sbt_submit_api } from '@entities/sbt'
 import { createLogger } from '@app/logger'
 const logger = createLogger(__filename)
 
-async function getTaskListAct(req: Request) {
+async function getSubmitAPIListAct(req: Request) {
   const doc = common.docValidate(req),
     returnData = Object.create(null)
 
@@ -37,6 +37,46 @@ async function getTaskListAct(req: Request) {
   return common.success(returnData)
 }
 
+async function modifySubmitAPIAct(req: Request) {
+  const doc = common.docValidate(req)
+  let api = await sbt_submit_api.findOne({
+    where: {
+      sbt_submit_api_id: doc.sbt_submit_api_id
+    }
+  })
+
+  if (api) {
+    if (doc.sbt_submit_api_status) {
+      api.sbt_submit_api_status = doc.sbt_submit_api_status
+    }
+    await api.save()
+  } else {
+    return common.error('common_api_02')
+  }
+
+  return common.success()
+}
+
+async function deleteSubmitAPIAct(req: Request) {
+  const doc = common.docValidate(req)
+  let api = await sbt_submit_api.findOne({
+    where: {
+      sbt_submit_api_id: doc.sbt_submit_api_id
+    }
+  })
+
+  if (api) {
+    api.base.state = '0'
+    await api.save()
+  } else {
+    return common.error('common_api_02')
+  }
+
+  return common.success()
+}
+
 export default {
-  getTaskListAct
+  getSubmitAPIListAct,
+  modifySubmitAPIAct,
+  deleteSubmitAPIAct
 }
