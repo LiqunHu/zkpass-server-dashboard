@@ -17,7 +17,10 @@ async function getSubmitAPIListAct(req: Request) {
   const result = await queryWithCount(doc, queryStr, replacements)
 
   returnData.total = result.count
-  returnData.rows = result.data
+  returnData.rows = result.data.map((item)=> {
+    item.sbt_submit_api_data = item.sbt_submit_api_data.length > 0 ? JSON.parse(item.sbt_submit_api_data) : {}
+    return item
+  })
 
   return common.success(returnData)
 }
@@ -41,7 +44,7 @@ async function submitAPIAct(req: Request) {
       sbt_submit_api_discord: doc.discord,
       sbt_submit_api_description: doc.describe,
       sbt_submit_api_images: doc.files,
-      sbt_submit_api_data: doc.requests
+      sbt_submit_api_data: JSON.stringify(doc.requests)
     })
     .save()
 

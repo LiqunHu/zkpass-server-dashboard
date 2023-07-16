@@ -5,12 +5,12 @@ import {
   ValueTransformer,
   BaseEntity
 } from 'typeorm'
-import CryptoJS from 'crypto-js'
+import crypto from 'crypto'
 import { base_entity } from '@/entities/base_entity'
 
 const toMD5Hash: ValueTransformer = {
   from: (value: string) => value,
-  to: (value: string) => CryptoJS.MD5(value).toString()
+  to: (value: string) => crypto.createHash('sha256').update(value).digest("hex")
 }
 
 @Entity({ name: 'tbl_common_user' })

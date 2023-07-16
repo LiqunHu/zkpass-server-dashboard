@@ -27,13 +27,8 @@ export class sbt_submit_api extends BaseEntity {
   @Column({ type: 'simple-array', comment: '图片' })
   sbt_submit_api_images: string
 
-  @Column({ type: 'simple-json', comment: 'api内容' })
-  sbt_submit_api_data: [
-    {
-      request: object
-      response: object
-    }
-  ]
+  @Column({ type: 'longtext', comment: 'api内容' })
+  sbt_submit_api_data: string
 
   @Column({ default: '0', length: 10, comment: '状态 0--提交' })
   sbt_submit_api_status: string

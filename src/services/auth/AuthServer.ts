@@ -46,7 +46,7 @@ async function signinAct(req: Request) {
       return common.error('auth_03')
     }
 
-    const decrypted = authority.aesDecryptModeECB(
+    const decrypted = await authority.aesDecryptModeCBC(
       doc.identify_code,
       user.user_password
     )
