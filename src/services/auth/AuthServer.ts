@@ -742,56 +742,56 @@ async function iterationMenu(
         menu_id: 1,
         menu_type: GLBConfig.NODE_TYPE.NODE_LEAF,
         menu_name: '系统菜单维护',
-        menu_path: '/admin/auth/SystemApiControl'
+        menu_path: '/system/auth/SystemApiControl'
       })
 
       return_list[0].sub_menu.push({
         menu_id: 2,
         menu_type: GLBConfig.NODE_TYPE.NODE_LEAF,
         menu_name: '角色组维护',
-        menu_path: '/admin/auth/GroupControl'
+        menu_path: '/system/auth/GroupControl'
       })
 
       return_list[0].sub_menu.push({
         menu_id: 3,
         menu_type: GLBConfig.NODE_TYPE.NODE_LEAF,
         menu_name: '用户维护',
-        menu_path: '/admin/auth/OperatorControl'
+        menu_path: '/system/auth/OperatorControl'
       })
 
       return_list[0].sub_menu.push({
         menu_id: 4,
         menu_type: GLBConfig.NODE_TYPE.NODE_LEAF,
         menu_name: '机构模板维护',
-        menu_path: '/admin/auth/OrganizationTemplateControl'
+        menu_path: '/system/auth/OrganizationTemplateControl'
       })
 
       return_list[0].sub_menu.push({
         menu_id: 5,
         menu_type: GLBConfig.NODE_TYPE.NODE_LEAF,
         menu_name: '机构维护',
-        menu_path: '/admin/auth/OrganizationControl'
+        menu_path: '/system/auth/OrganizationControl'
       })
 
       return_list[0].sub_menu.push({
         menu_id: 6,
         menu_type: GLBConfig.NODE_TYPE.NODE_LEAF,
         menu_name: '重置密码',
-        menu_path: '/admin/auth/ResetPassword'
+        menu_path: '/system/auth/ResetPassword'
       })
     } else {
       return_list[0].sub_menu.push({
         menu_id: 7,
         menu_type: GLBConfig.NODE_TYPE.NODE_LEAF,
         menu_name: '机构组织维护',
-        menu_path: '/admin/auth/OrganizationGroupControl'
+        menu_path: '/system/auth/OrganizationGroupControl'
       })
 
       return_list[0].sub_menu.push({
         menu_id: 8,
         menu_type: GLBConfig.NODE_TYPE.NODE_LEAF,
         menu_name: '机构用户维护',
-        menu_path: '/admin/auth/OrganizationUserControl'
+        menu_path: '/system/auth/OrganizationUserControl'
       })
     }
 

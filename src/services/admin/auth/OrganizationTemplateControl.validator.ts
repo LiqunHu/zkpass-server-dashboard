@@ -7,7 +7,7 @@ export default {
       name: '获取组数据字典',
       enname: 'OrganizationTemplateControlinit',
       tags: ['OrganizationTemplateControl'],
-      path: '/api/admin/auth/OrganizationTemplateControl/init',
+      path: '/api/system/auth/OrganizationTemplateControl/init',
       type: 'post',
       JoiSchema: {},
     },
@@ -15,7 +15,7 @@ export default {
       name: '查询模板',
       enname: 'OrganizationTemplateControlgetTemplate',
       tags: ['OrganizationTemplateControl'],
-      path: '/api/admin/auth/OrganizationTemplateControl/getTemplate',
+      path: '/api/system/auth/OrganizationTemplateControl/getTemplate',
       type: 'post',
       JoiSchema: {
         body: {
@@ -27,7 +27,7 @@ export default {
       name: '增加模板',
       enname: 'OrganizationTemplateControladdTemplate',
       tags: ['OrganizationTemplateControl'],
-      path: '/api/admin/auth/OrganizationTemplateControl/addTemplate',
+      path: '/api/system/auth/OrganizationTemplateControl/addTemplate',
       type: 'post',
       JoiSchema: {
         body: {
@@ -39,7 +39,7 @@ export default {
       name: '删除模板',
       enname: 'OrganizationTemplateControlremoveTemplate',
       tags: ['OrganizationTemplateControl'],
-      path: '/api/admin/auth/OrganizationTemplateControl/removeTemplate',
+      path: '/api/system/auth/OrganizationTemplateControl/removeTemplate',
       type: 'post',
       JoiSchema: {
         body: {
@@ -51,7 +51,7 @@ export default {
       name: '查询模板菜单',
       enname: 'OrganizationTemplateControlgetTemplateMenu',
       tags: ['OrganizationTemplateControl'],
-      path: '/api/admin/auth/OrganizationTemplateControl/getTemplateMenu',
+      path: '/api/system/auth/OrganizationTemplateControl/getTemplateMenu',
       type: 'post',
       JoiSchema: {
         body: {
@@ -63,7 +63,7 @@ export default {
       name: '增加目录',
       enname: 'OrganizationTemplateControladdFolder',
       tags: ['OrganizationTemplateControl'],
-      path: '/api/admin/auth/OrganizationTemplateControl/addFolder',
+      path: '/api/system/auth/OrganizationTemplateControl/addFolder',
       type: 'post',
       JoiSchema: {
         body: {
@@ -78,7 +78,7 @@ export default {
       name: '增加菜单',
       enname: 'OrganizationTemplateControladdMenus',
       tags: ['OrganizationTemplateControl'],
-      path: '/api/admin/auth/OrganizationTemplateControl/addMenus',
+      path: '/api/system/auth/OrganizationTemplateControl/addMenus',
       type: 'post',
       JoiSchema: {
         body: {
@@ -97,7 +97,7 @@ export default {
       name: '删除对象',
       enname: 'OrganizationTemplateControlremoveItem',
       tags: ['OrganizationTemplateControl'],
-      path: '/api/admin/auth/OrganizationTemplateControl/removeItem',
+      path: '/api/system/auth/OrganizationTemplateControl/removeItem',
       type: 'post',
       JoiSchema: {
         body: {

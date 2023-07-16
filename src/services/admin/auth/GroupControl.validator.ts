@@ -7,7 +7,7 @@ export default {
       name: '获取组数据字典',
       enname: 'GroupControlinit',
       tags: ['GroupControl'],
-      path: '/api/admin/auth/GroupControl/init',
+      path: '/api/system/auth/GroupControl/init',
       type: 'post',
       JoiSchema: {},
     },
@@ -15,7 +15,7 @@ export default {
       name: '组查询',
       enname: 'GroupControlsearch',
       tags: ['GroupControl'],
-      path: '/api/admin/auth/GroupControl/search',
+      path: '/api/system/auth/GroupControl/search',
       type: 'post',
       JoiSchema: {},
     },
@@ -23,7 +23,7 @@ export default {
       name: '获取组下拥有的菜单',
       enname: 'GroupControlgetcheck',
       tags: ['GroupControl'],
-      path: '/api/admin/auth/GroupControl/getcheck',
+      path: '/api/system/auth/GroupControl/getcheck',
       type: 'post',
       JoiSchema: {
         body: {
@@ -35,7 +35,7 @@ export default {
       name: '增加目录或者节点',
       enname: 'GroupControladd',
       tags: ['GroupControl'],
-      path: '/api/admin/auth/GroupControl/add',
+      path: '/api/system/auth/GroupControl/add',
       type: 'post',
       JoiSchema: {
         body: {
@@ -55,7 +55,7 @@ export default {
       name: '修改节点',
       enname: 'GroupControlmodify',
       tags: ['GroupControl'],
-      path: '/api/admin/auth/GroupControl/modify',
+      path: '/api/system/auth/GroupControl/modify',
       type: 'post',
       JoiSchema: {
         body: {
@@ -74,7 +74,7 @@ export default {
       name: '删除组',
       enname: 'GroupControlremove',
       tags: ['GroupControl'],
-      path: '/api/admin/auth/GroupControl/remove',
+      path: '/api/system/auth/GroupControl/remove',
       type: 'post',
       JoiSchema: {
         body: {
