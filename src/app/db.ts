@@ -126,7 +126,7 @@ export async function queryWithCount(pageDoc: pageInfo, queryStr: string, replac
   const count = await entityManager.query(queryStrCnt, replacements)
 
   const rep = replacements || []
-  rep.push((pageDoc.offset || 0) * (pageDoc.limit || 100))
+  rep.push((pageDoc.offset || 0))
   rep.push(pageDoc.limit || 100)
 
   const queryRst = await entityManager.query(queryStr + ' LIMIT ?,?', rep)
