@@ -9,7 +9,7 @@ async function getTaskListAct(req: Request) {
   const doc = common.docValidate(req),
     returnData = Object.create(null)
 
-  let queryStr = `SELECT * FROM tbl_sbt_task WHERE state='1' AND sbt_task_status = '1' `
+  let queryStr = `SELECT * FROM tbl_sbt_task WHERE state='1' `
 
   const replacements = []
 
