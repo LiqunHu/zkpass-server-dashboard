@@ -29,7 +29,7 @@ async function getTaskListAct(req: Request) {
   }
 
   if (doc.search_text) {
-    queryStr += ' AND sbt_task_url LIKE ? '
+    queryStr += ' AND sbt_task_domain LIKE ? '
     const search_text = '%' + doc.search_text + '%'
     replacements.push(search_text)
   }
