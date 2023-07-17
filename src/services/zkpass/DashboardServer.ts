@@ -9,7 +9,7 @@ async function getTaskListAct(req: Request) {
   const doc = common.docValidate(req),
     returnData = Object.create(null)
 
-  let queryStr = `SELECT * FROM tbl_sbt_task WHERE state='1' AND sbt_task_status = '1' AND state = '1'`
+  let queryStr = `SELECT * FROM tbl_sbt_task WHERE state='1' AND sbt_task_status = '1'`
 
   const replacements = []
 
@@ -24,7 +24,7 @@ async function getTaskListAct(req: Request) {
   }
 
   if (doc.search_text) {
-    queryStr += ' AND sbt_task_url LIKE ? '
+    queryStr += ' AND sbt_task_domain LIKE ? '
     const search_text = '%' + doc.search_text + '%'
     replacements.push(search_text)
   }

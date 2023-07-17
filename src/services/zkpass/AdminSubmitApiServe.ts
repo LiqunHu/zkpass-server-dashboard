@@ -9,22 +9,25 @@ async function getSubmitAPIListAct(req: Request) {
   const doc = common.docValidate(req),
     returnData = Object.create(null)
 
-  let queryStr = `SELECT * FROM tbl_sbt_task WHERE state='1' AND sbt_task_status = '1' AND state = '1'`
+  let queryStr = `SELECT
+    a.*,
+    b.user_account,
+    b.user_name 
+  FROM
+    tbl_sbt_submit_api a
+    LEFT JOIN tbl_common_user b ON a.user_id = b.user_id 
+  WHERE
+    a.state = '1'`
 
   const replacements = []
 
-  if (doc.sbt_task_country_code) {
-    queryStr += ' AND sbt_task_country_code = ? '
-    replacements.push(doc.sbt_task_country_code)
-  }
-
-  if (doc.sbt_task_category) {
-    queryStr += ' AND sbt_task_category = ? '
-    replacements.push(doc.sbt_task_category)
+  if (doc.sbt_submit_api_status) {
+    queryStr += ' AND a.sbt_submit_api_status = ? '
+    replacements.push(doc.sbt_submit_api_status)
   }
 
   if (doc.search_text) {
-    queryStr += ' AND sbt_task_url LIKE ? '
+    queryStr += ' AND a.sbt_submit_api_domain LIKE ? '
     const search_text = '%' + doc.search_text + '%'
     replacements.push(search_text)
   }
@@ -32,14 +35,20 @@ async function getSubmitAPIListAct(req: Request) {
   const result = await queryWithCount(doc, queryStr, replacements)
 
   returnData.total = result.count
-  returnData.rows = result.data
+  returnData.rows = result.data.map((item) => {
+    item.sbt_submit_api_data =
+      item.sbt_submit_api_data.length > 0
+        ? JSON.parse(item.sbt_submit_api_data)
+        : {}
+    return item
+  })
 
   return common.success(returnData)
 }
 
 async function modifySubmitAPIAct(req: Request) {
   const doc = common.docValidate(req)
-  let api = await sbt_submit_api.findOne({
+  const api = await sbt_submit_api.findOne({
     where: {
       sbt_submit_api_id: doc.sbt_submit_api_id
     }
@@ -59,7 +68,7 @@ async function modifySubmitAPIAct(req: Request) {
 
 async function deleteSubmitAPIAct(req: Request) {
   const doc = common.docValidate(req)
-  let api = await sbt_submit_api.findOne({
+  const api = await sbt_submit_api.findOne({
     where: {
       sbt_submit_api_id: doc.sbt_submit_api_id
     }

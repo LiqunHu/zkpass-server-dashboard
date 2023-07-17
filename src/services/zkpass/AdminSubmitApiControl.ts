@@ -14,7 +14,7 @@ export default async function (req: Request, res: Response) {
       ret = await srv.getSubmitAPIListAct(req)
     } else if (method === 'modifySubmitAPI') {
       ret = await srv.modifySubmitAPIAct(req)
-    } else if (method === 'deleteTSubmitAPI') {
+    } else if (method === 'deleteSubmitAPI') {
       ret = await srv.deleteSubmitAPIAct(req)
     }
 
