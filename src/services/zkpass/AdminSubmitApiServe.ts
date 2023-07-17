@@ -21,6 +21,16 @@ async function getSubmitAPIListAct(req: Request) {
 
   const replacements = []
 
+  if (doc.sbt_submit_api_country_code) {
+    queryStr += ' AND a.sbt_submit_api_country_code = ? '
+    replacements.push(doc.sbt_submit_api_country_code)
+  }
+
+  if (doc.sbt_submit_api_category) {
+    queryStr += ' AND a.sbt_submit_api_category = ? '
+    replacements.push(doc.sbt_submit_api_category)
+  }
+
   if (doc.sbt_submit_api_status) {
     queryStr += ' AND a.sbt_submit_api_status = ? '
     replacements.push(doc.sbt_submit_api_status)

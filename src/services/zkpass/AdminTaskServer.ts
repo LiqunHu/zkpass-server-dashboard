@@ -23,6 +23,11 @@ async function getTaskListAct(req: Request) {
     replacements.push(doc.sbt_task_category)
   }
 
+  if (doc.sbt_task_status) {
+    queryStr += ' AND sbt_task_status = ? '
+    replacements.push(doc.sbt_task_status)
+  }
+
   if (doc.search_text) {
     queryStr += ' AND sbt_task_url LIKE ? '
     const search_text = '%' + doc.search_text + '%'

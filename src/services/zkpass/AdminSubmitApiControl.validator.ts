@@ -11,6 +11,8 @@ export default {
       type: 'post',
       JoiSchema: {
         body: {
+          sbt_submit_api_country_code: Joi.string().empty('').max(10),
+          sbt_submit_api_category: Joi.string().empty('').max(20),
           sbt_submit_api_status: Joi.string().empty('').max(10),
           search_text: Joi.string().empty('').max(50),
           limit: Joi.number().integer(),
