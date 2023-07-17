@@ -37,6 +37,21 @@ async function getTaskListAct(req: Request) {
   return common.success(returnData)
 }
 
+async function addTaskAct(req: Request) {
+  const doc = common.docValidate(req)
+  await sbt_task
+    .create({
+      sbt_task_country_code: doc.sbt_task_country_code,
+      sbt_task_category: doc.sbt_task_category,
+      sbt_task_domain: doc.sbt_task_domain,
+      sbt_task_requirements: doc.sbt_task_requirements,
+      sbt_task_reward: doc.sbt_task_reward,
+      sbt_task_status: doc.sbt_task_status
+    })
+    .save()
+  return common.success()
+}
+
 async function modifyTaskAct(req: Request) {
   const doc = common.docValidate(req)
   const task = await sbt_task.findOne({
@@ -92,6 +107,7 @@ async function deleteTaskAct(req: Request) {
 
 export default {
   getTaskListAct,
+  addTaskAct,
   modifyTaskAct,
   deleteTaskAct
 }

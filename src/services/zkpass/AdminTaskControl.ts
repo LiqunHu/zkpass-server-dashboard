@@ -12,6 +12,8 @@ export default async function (req: Request, res: Response) {
 
     if (method === 'getTaskList') {
       ret = await srv.getTaskListAct(req)
+    } else if (method === 'addTask') {
+      ret = await srv.addTaskAct(req)
     } else if (method === 'modifyTask') {
       ret = await srv.modifyTaskAct(req)
     } else if (method === 'deleteTask') {
