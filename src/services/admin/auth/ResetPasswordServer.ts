@@ -23,6 +23,10 @@ async function searchAct(req: Request) {
       {
         user_email: doc.search_text,
         user_type: Not(GLBConfig.USER_TYPE.TYPE_ADMINISTRATOR)
+      },
+      {
+        user_account: doc.search_text,
+        user_type: Not(GLBConfig.USER_TYPE.TYPE_ADMINISTRATOR)
       }
     ]
   })

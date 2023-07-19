@@ -11,7 +11,7 @@ export default {
       type: 'post',
       JoiSchema: {
         body: {
-          search_text: Joi.string().empty('').max(50),
+          search_text: Joi.string().max(50).required(),
         },
       },
     },
@@ -23,7 +23,7 @@ export default {
       type: 'post',
       JoiSchema: {
         body: {
-          user_id: Joi.string().max(50),
+          user_id: Joi.string().max(50).required(),
           version: Joi.number().integer(),
           updated_at: Joi.string().max(50),
         },
