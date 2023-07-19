@@ -27,7 +27,7 @@ export default {
       type: 'post',
       JoiSchema: {
         body: {
-          usergroup_id: Joi.number().integer(),
+          usergroup_id: Joi.number().integer().required(),
         },
       },
     },
@@ -78,7 +78,7 @@ export default {
       type: 'post',
       JoiSchema: {
         body: {
-          usergroup_id: Joi.number().integer(),
+          usergroup_id: Joi.number().integer().required(),
         },
       },
     },

@@ -9,7 +9,7 @@ export default {
       tags: ['OperatorControl'],
       path: '/api/system/auth/OperatorControl/init',
       type: 'post',
-      JoiSchema: {},
+      JoiSchema: {}
     },
     search: {
       name: '用户查询',
@@ -21,9 +21,9 @@ export default {
         body: {
           search_text: Joi.string().empty('').max(50),
           limit: Joi.number().integer(),
-          offset: Joi.number().integer(),
-        },
-      },
+          offset: Joi.number().integer()
+        }
+      }
     },
     add: {
       name: '增加操作员',
@@ -40,9 +40,9 @@ export default {
           user_gender: Joi.string().max(2),
           user_address: Joi.string().empty('').max(100),
           user_zipcode: Joi.string().empty('').max(10),
-          user_groups: Joi.array().items(Joi.number().integer()),
-        },
-      },
+          user_groups: Joi.array().items(Joi.number().integer())
+        }
+      }
     },
     modify: {
       name: '修改用户',
@@ -51,45 +51,25 @@ export default {
       path: '/api/system/auth/OperatorControl/modify',
       type: 'post',
       JoiSchema: {
-        body: Joi.object().keys({
-          new: Joi.object().keys({
-            user_id: Joi.string().max(36),
-            user_username: Joi.string().max(100),
-            user_email: Joi.string().max(100),
-            user_country_code: Joi.string().max(5),
-            user_phone: Joi.string().max(20),
-            user_name: Joi.string().empty('').max(100),
-            user_gender: Joi.string().empty('').max(1),
-            user_avatar: Joi.string().empty('').max(200),
-            user_province: Joi.string().empty('').max(20),
-            user_city: Joi.string().empty('').max(20),
-            user_district: Joi.string().empty('').max(20),
-            user_address: Joi.string().empty('').max(100),
-            user_zipcode: Joi.string().empty('').max(20),
-            user_company: Joi.string().empty('').max(200),
-            user_remark: Joi.string().empty('').max(200),
-            user_groups: Joi.array().items(Joi.number().integer()),
-          }),
-          old: Joi.object().keys({
-            user_id: Joi.string().max(36),
-            user_username: Joi.string().max(100),
-            user_email: Joi.string().max(100),
-            user_country_code: Joi.string().max(5),
-            user_phone: Joi.string().max(20),
-            user_name: Joi.string().empty('').max(100),
-            user_gender: Joi.string().empty('').max(1),
-            user_avatar: Joi.string().empty('').max(200),
-            user_province: Joi.string().empty('').max(20),
-            user_city: Joi.string().empty('').max(20),
-            user_district: Joi.string().empty('').max(20),
-            user_address: Joi.string().empty('').max(100),
-            user_zipcode: Joi.string().empty('').max(20),
-            user_company: Joi.string().empty('').max(200),
-            user_remark: Joi.string().empty('').max(200),
-            user_groups: Joi.array().items(Joi.number().integer()),
-          }),
-        }),
-      },
+        body: {
+          user_id: Joi.string().max(36).required(),
+          user_username: Joi.string().max(100),
+          user_email: Joi.string().empty('').max(100),
+          user_country_code: Joi.string().max(5),
+          user_phone: Joi.string().empty('').max(20),
+          user_name: Joi.string().empty('').max(100),
+          user_gender: Joi.string().empty('').max(1),
+          user_avatar: Joi.string().empty('').max(200),
+          user_province: Joi.string().empty('').max(20),
+          user_city: Joi.string().empty('').max(20),
+          user_district: Joi.string().empty('').max(20),
+          user_address: Joi.string().empty('').max(100),
+          user_zipcode: Joi.string().empty('').max(20),
+          user_company: Joi.string().empty('').max(200),
+          user_remark: Joi.string().empty('').max(200),
+          user_groups: Joi.array().items(Joi.number().integer())
+        }
+      }
     },
     delete: {
       name: '删除用户',
@@ -98,10 +78,10 @@ export default {
       path: '/api/system/auth/OperatorControl/delete',
       type: 'post',
       JoiSchema: {
-        body: Joi.object().keys({
-          user_id: Joi.string().max(50),
-        }),
-      },
-    },
-  },
+        body: {
+          user_id: Joi.string().max(50).required()
+        }
+      }
+    }
+  }
 }

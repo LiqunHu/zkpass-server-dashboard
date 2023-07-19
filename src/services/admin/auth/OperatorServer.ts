@@ -64,8 +64,9 @@ async function searchAct(req: Request) {
 
   if (doc.search_text) {
     queryStr +=
-      ' and (user_username like ? or user_email like ? or user_phone like ? or user_name like ? or user_address like ?)'
+      ' and (user_username like ? or user_email like ? or user_phone like ? or user_name like ? or user_address like ? or user_account like ?)'
     const search_text = '%' + doc.search_text + '%'
+    replacements.push(search_text)
     replacements.push(search_text)
     replacements.push(search_text)
     replacements.push(search_text)
@@ -150,39 +151,39 @@ async function modifyAct(req: Request) {
   const doc = common.docValidate(req)
 
   const modiuser = await common_user.findOneBy({
-    user_id: doc.old.user_id,
+    user_id: doc.user_id,
     base: {
       state: GLBConfig.ENABLE,
     }
   })
   if (modiuser) {
-    if (doc.new.user_email) {
+    if (doc.user_email) {
       const emailuser = await common_user.findOneBy({
         user_id: Not(modiuser.user_id),
-        user_email: doc.new.user_email,
+        user_email: doc.user_email,
       })
       if (emailuser) {
         return common.error('operator_02')
       }
     }
 
-    if (doc.new.user_phone) {
+    if (doc.user_phone) {
       const phoneuser = await common_user.findOneBy({
           user_id: Not(modiuser.user_id),
-          user_phone: doc.new.user_phone,
+          user_phone: doc.user_phone,
       })
       if (phoneuser) {
         return common.error('operator_02')
       }
     }
 
-    modiuser.user_email = doc.new.user_email
-    modiuser.user_phone = doc.new.user_phone
-    modiuser.user_name = doc.new.user_name
-    modiuser.user_gender = doc.new.user_gender
-    modiuser.user_avatar = doc.new.user_avatar
-    modiuser.user_address = doc.new.user_address
-    modiuser.user_zipcode = doc.new.user_zipcode
+    modiuser.user_email = doc.user_email
+    modiuser.user_phone = doc.user_phone
+    modiuser.user_name = doc.user_name
+    modiuser.user_gender = doc.user_gender
+    modiuser.user_avatar = doc.user_avatar
+    modiuser.user_address = doc.user_address
+    modiuser.user_zipcode = doc.user_zipcode
     await modiuser.save()
 
     const queryStr = `SELECT
@@ -198,7 +199,7 @@ async function modifyAct(req: Request) {
     const groups = await simpleSelect(queryStr, [modiuser.user_id])
     const existids = []
     for (const g of groups) {
-      if (doc.new.user_groups.indexOf(g.usergroup_id) < 0) {
+      if (doc.user_groups.indexOf(g.usergroup_id) < 0) {
         await common_user_groups.delete({
           user_groups_id: g.user_groups_id,
         })
@@ -207,7 +208,7 @@ async function modifyAct(req: Request) {
       }
     }
 
-    for (const gid of doc.new.user_groups) {
+    for (const gid of doc.user_groups) {
       if (existids.indexOf(gid) < 0) {
         await common_user_groups.create({
           user_id: modiuser.user_id,
@@ -218,7 +219,7 @@ async function modifyAct(req: Request) {
 
     const returnData = JSON.parse(JSON.stringify(modiuser))
     delete returnData.user_password
-    returnData.user_groups = doc.new.user_groups
+    returnData.user_groups = doc.user_groups
     logger.debug('modify success')
     return common.success(returnData)
   } else {

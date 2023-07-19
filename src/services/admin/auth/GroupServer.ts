@@ -11,7 +11,7 @@ interface menuItem {
   systemmenu_name?: string
   node_type: string
   name: string
-  isParent: boolean
+  parent_flag: boolean
   title: string
   expand?: boolean
   api_id?: number
@@ -25,7 +25,7 @@ async function initAct() {
     {
       systemmenu_id: 0,
       name: '根目录',
-      isParent: true,
+      parent_flag: true,
       title: '根目录',
       expand: true,
       node_type: GLBConfig.NODE_TYPE.NODE_ROOT,
@@ -59,7 +59,7 @@ async function genMenu(parentId: number | string): Promise<menuItem[]> {
         systemmenu_name: m.systemmenu_name,
         node_type: m.node_type,
         name: m.systemmenu_name,
-        isParent: true,
+        parent_flag: true,
         title: m.systemmenu_name,
         expand: true,
         parent_id: m.parent_id,
@@ -73,7 +73,7 @@ async function genMenu(parentId: number | string): Promise<menuItem[]> {
         node_type: m.node_type,
         name: m.systemmenu_name + '->' + m.api_function,
         title: m.systemmenu_name + '->' + m.api_function,
-        isParent: false,
+        parent_flag: false,
         parent_id: m.parent_id,
       })
     }
@@ -86,7 +86,7 @@ async function searchAct() {
     {
       usergroup_id: 0,
       name: '总机构',
-      isParent: true,
+      parent_flag: true,
       title: '根目录',
       expand: true,
       node_type: GLBConfig.NODE_TYPE.NODE_ROOT,
@@ -112,7 +112,7 @@ async function genUserGroup(parentId: string): Promise<any> {
         node_type: g.node_type,
         usergroup_type: g.usergroup_type,
         name: g.usergroup_name,
-        isParent: true,
+        parent_flag: true,
         title: g.usergroup_name,
         expand: true,
         parent_id: g.parent_id,
@@ -126,7 +126,7 @@ async function genUserGroup(parentId: string): Promise<any> {
         usergroup_code: g.usergroup_code,
         name: g.usergroup_name,
         title: g.usergroup_name,
-        isParent: false,
+        parent_flag: false,
         parent_id: g.parent_id,
       })
     }
