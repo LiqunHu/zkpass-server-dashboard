@@ -17,7 +17,7 @@ async function getSubmitAPIListAct(req: Request) {
     tbl_sbt_submit_api a
     LEFT JOIN tbl_common_user b ON a.user_id = b.user_id 
   WHERE
-    a.state = '1'`
+    a.state = '1' `
 
   const replacements = []
 
