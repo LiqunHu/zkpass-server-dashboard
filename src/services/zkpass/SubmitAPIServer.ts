@@ -11,7 +11,7 @@ async function getSubmitAPIListAct(req: Request) {
     user = req.user,
     returnData = Object.create(null)
 
-  const queryStr = `SELECT * FROM tbl_sbt_submit_api WHERE user_id = ? `
+  const queryStr = `SELECT * FROM tbl_sbt_submit_api WHERE user_id = ? ORDER BY created_at DESC`
   const replacements = [user.user_id]
 
   const result = await queryWithCount(doc, queryStr, replacements)
