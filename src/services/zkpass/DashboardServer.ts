@@ -9,7 +9,7 @@ async function getTaskListAct(req: Request) {
   const doc = common.docValidate(req),
     returnData = Object.create(null)
 
-  let queryStr = `SELECT * FROM tbl_sbt_task WHERE state='1' AND sbt_task_status = '1'`
+  let queryStr = `SELECT * FROM tbl_sbt_task WHERE state='1' AND sbt_task_status = '1' `
 
   const replacements = []
 
@@ -28,6 +28,8 @@ async function getTaskListAct(req: Request) {
     const search_text = '%' + doc.search_text + '%'
     replacements.push(search_text)
   }
+
+  queryStr += 'ORDER BY created_at DESC'
 
   const result = await queryWithCount(doc, queryStr, replacements)
 

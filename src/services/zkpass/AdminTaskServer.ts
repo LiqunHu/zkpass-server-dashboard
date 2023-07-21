@@ -34,6 +34,8 @@ async function getTaskListAct(req: Request) {
     replacements.push(search_text)
   }
 
+  queryStr += 'ORDER BY created_at DESC'
+
   const result = await queryWithCount(doc, queryStr, replacements)
 
   returnData.total = result.count
