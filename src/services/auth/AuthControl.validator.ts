@@ -63,6 +63,7 @@ export default {
         body: {
           login_type: Joi.string().allow('WEB', 'MOBILE'),
           address: Joi.string(),
+          timestamp: Joi.number(),
           signature: Joi.string(),
         },
       },

@@ -234,7 +234,17 @@ async function signinBySmsAct(req: Request) {
 
 async function signinByAccountAct(req: Request) {
   const doc = common.docValidate(req)
-  const signAddress = web3js.eth.accounts.recover('join zpkass', doc.signature)
+  let now = dayjs().millisecond()
+  if (doc.timestamp < now - 60000 || doc.timestamp > now) {
+    return common.error('auth_15')
+  }
+  const signAddress = web3js.eth.accounts.recover(
+    `Welcome to zkPass
+  By connecting your wallet and using zkPass, you agree to our Terms of Service and Privacy Policy.
+${dayjs(doc.timestamp).format('HH:mm MM-DD')}`,
+    doc.signature
+  )
+
   if (doc.address == signAddress) {
     let user = await common_user.findOneBy({
       user_account: doc.address
