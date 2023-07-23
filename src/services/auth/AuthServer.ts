@@ -234,7 +234,7 @@ async function signinBySmsAct(req: Request) {
 
 async function signinByAccountAct(req: Request) {
   const doc = common.docValidate(req)
-  let now = dayjs().millisecond()
+  const now = dayjs().valueOf()
   if (doc.timestamp < now - 60000 || doc.timestamp > now) {
     return common.error('auth_15')
   }
