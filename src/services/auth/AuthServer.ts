@@ -240,7 +240,7 @@ async function signinByAccountAct(req: Request) {
   }
   const signAddress = web3js.eth.accounts.recover(
     `Welcome to zkPass
-  By connecting your wallet and using zkPass, you agree to our Terms of Service and Privacy Policy.
+By connecting your wallet and using zkPass, you agree to our Terms of Service and Privacy Policy.
 ${dayjs(doc.timestamp).format('HH:mm MM-DD')}`,
     doc.signature
   )
